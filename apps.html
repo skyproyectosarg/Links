@@ -5,115 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkyDev Apps | Herramientas 3D</title>
     
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "SkyScale 3D",
+      "operatingSystem": "Android",
+      "applicationCategory": "UtilitiesApplication",
+      "softwareVersion": "1.0",
+      "author": {
+        "@type": "Person",
+        "name": "Franco Jesús Pacheco"
+      }
+    }
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    
-    <style>
-        .security-notice {
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px solid #00ff88;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 25px;
-            font-size: 0.85em;
-            line-height: 1.4;
-            color: #00ff88;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .app-collapsible {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid #333;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            transition: 0.3s;
-        }
-
-        .app-collapsible summary {
-            padding: 20px;
-            list-style: none; 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .app-collapsible summary::-webkit-details-marker {
-            display: none; 
-        }
-
-        .app-collapsible[open] {
-            border-color: var(--accent-color);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .app-content {
-            padding: 0 20px 20px 20px;
-            text-align: left;
-            border-top: 1px solid #222;
-        }
-
-        .version-tag {
-            font-size: 0.7em;
-            background: var(--accent-color);
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-left: 10px;
-        }
-
-        .warning-box {
-            background: rgba(243, 156, 18, 0.1);
-            border-left: 4px solid #f39c12;
-            padding: 10px;
-            margin: 15px 0;
-            font-size: 0.85em;
-            color: #f39c12;
-        }
-
-        .back-button {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #888;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-
-        .back-button:hover { color: var(--accent-color); }
-
-        .inner-tutorial {
-            background: #111;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-
-        .step-item {
-            margin-bottom: 15px;
-            color: #ccc;
-            font-size: 0.85em;
-            line-height: 1.5;
-        }
-
-        .step-item strong {
-            color: var(--accent-color);
-            display: block;
-            margin-bottom: 3px;
-        }
-
-        .author-credit {
-            font-size: 0.75em;
-            color: #666;
-            margin-top: -10px;
-            margin-bottom: 15px;
-            display: block;
-            font-style: italic;
-        }
-    </style>
 </head>
 <body>
 
@@ -126,9 +34,9 @@
         <h1>SkyDev Software</h1>
         
         <div class="security-notice">
-            <i class="fas fa-shield-alt" style="font-size: 1.5em;"></i>
+            <i class="fas fa-shield-alt"></i>
             <span>
-                <strong>Búnker Oficial:</strong> Este es el único sitio autorizado para descargar mis apps. Así evitás publicidad engañosa e intermediarios. <b>Seguridad garantizada solo desde aquí.</b>
+                <strong>Búnker Oficial:</strong> Este es el único sitio autorizado para descargar mis apps. <b>Seguridad garantizada solo desde aquí.</b>
             </span>
         </div>
 
@@ -136,24 +44,24 @@
             
             <details class="app-collapsible">
                 <summary>
-                    <div>
+                    <div class="app-title">
                         <i class="fas fa-ruler-combined"></i> SkyScale 3D 
                         <span class="version-tag">v1.0</span>
                     </div>
-                    <i class="fas fa-chevron-down"></i>
+                    <i class="fas fa-chevron-down arrow"></i>
                 </summary>
                 
                 <div class="app-content">
-                    <p style="font-size: 0.9em; color: #ccc; margin-top: 15px;">
+                    <p class="app-description">
                         Optimizá el escalado de tus Chopps. Calculá el % exacto según la circunferencia real del inserto de aluminio.
                     </p>
 
-                    <a href="./apps/SkyScale3D.apk" class="link-card" style="margin: 10px 0;" download>
+                    <a href="./apps/SkyScale3D.apk" class="link-card download-btn" download>
                         <i class="fas fa-download"></i>
                         <span>Descargar APK Directa</span>
                     </a>
                     
-                    <a href="https://www.virustotal.com/gui/file/7aca41ff1042cc9d44721fdc01b255e79ffb18291abf3b627790130710ea9257/detection" target="_blank" class="link-card" style="margin: 0; background: #1a1a1a; font-size: 0.8em;">
+                    <a href="https://www.virustotal.com/gui/file/..." target="_blank" class="link-card vt-report">
                         <i class="fas fa-shield-virus"></i>
                         <span>Ver Reporte VirusTotal</span>
                     </a>
@@ -163,47 +71,33 @@
                     </div>
 
                     <div class="inner-tutorial">
-                        <h4 style="color: var(--accent-color); font-size: 1em; margin-bottom: 15px;">📖 Guía Técnica de Escalado:</h4>
+                        <h4>📖 Guía Técnica de Escalado:</h4>
                         
-                        <p style="font-size: 0.8em; color: #888; margin-bottom: 8px;">Herramienta recomendada para medir radios:</p>
-                        <a href="https://makerworld.com/en/models/2225287-caliper-radius-gauge-corner-radius-up-to-130-mm#profileId-2467730" target="_blank" class="link-card" style="margin: 0 0 15px 0; background: #333; border: 1px solid #444; font-size: 0.8em;">
+                        <p class="helper-text">Herramienta recomendada para medir radios:</p>
+                        <a href="https://makerworld.com/..." target="_blank" class="link-card tool-link">
                             <i class="fas fa-external-link-alt"></i> <span>Accesorio Calibre (MakerWorld)</span>
                         </a>
-                        <span class="author-credit">Créditos y agradecimiento al autor de este diseño por su aporte a la comunidad.</span>
+                        <span class="author-credit">Créditos al autor por su aporte a la comunidad.</span>
 
                         <div class="step-item">
                             <strong>1. Medición del Inserto</strong>
-                            Medí el contorno superior del aluminio con cinta de modista (bien tensa). Anotá los cm exactos.
+                            Medí el contorno superior del aluminio con cinta de modista. Anotá los cm.
                         </div>
 
                         <div class="step-item">
                             <strong>2. Medición del Diseño (STL)</strong>
-                            En Bambu Studio, Orca o Cura, medí el diámetro interno del hueco del modelo donde encastra el aluminio.
+                            En el slicer, medí el diámetro interno del hueco del modelo.
                         </div>
 
                         <div class="step-item">
                             <strong>3. Cálculo en la App</strong>
-                            Ingresá ambos valores en SkyScale 3D. La app te dará el <strong>% de escala</strong> necesario para X e Y.
-                        </div>
-
-                        <div class="step-item">
-                            <strong>4. Configuración del Slicer</strong>
-                            Desactivá el "Escalado Uniforme" (el candadito), aplicá el % en X e Y, y ajustá la altura Z manualmente.
-                        </div>
-
-                        <div class="step-item">
-                            <strong>5. Prueba FDM Safe</strong>
-                            Usá la herramienta de corte para imprimir solo una "rodaja" y verificar el calce antes del modelo final.
+                            Ingresá ambos valores en SkyScale 3D para obtener el %.
                         </div>
                     </div>
-
-                    <p style="text-align: center; font-size: 0.7em; color: #555; margin-top: 15px;">
-                        🎥 Video tutorial próximamente en YouTube y TikTok.
-                    </p>
                 </div>
             </details>
 
-            <p style="color: #444; font-size: 0.8em; margin-top: 20px;">
+            <p class="dev-status">
                 <i class="fas fa-code"></i> Próximas utilidades en desarrollo...
             </p>
 
