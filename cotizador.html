@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Pro | SkyDev</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/calculator.css">
+    <style>
+        body { background: #0d1117; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
+        .nav-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .nav-header a { color: #8b949e; text-decoration: none; font-size: 1.2em; }
+        .nav-header h1 { font-size: 1.2em; margin: 0; color: #00ff88; }
+    </style>
+</head>
+<body>
+    <div class="nav-header">
+        <a href="apps.html"><i class="fas fa-arrow-left"></i></a>
+        <h1>Cotizador 3D Pro</h1>
+    </div>
+    <div class="calc-container">
+        <div class="dashboard-grid">
+            <div class="card-calc">
+                <div class="card-title-calc"><span>Insumos</span></div>
+                <div class="input-group-calc">
+                    <label>Filamento ($/KG)</label>
+                    <input type="number" id="precioKg" value="18500" oninput="calcular()">
+                </div>
+                <div class="row-calc">
+                    <div class="input-group-calc">
+                        <label>kWh ($)</label>
+                        <input type="number" id="ckwh" value="130.71" oninput="calcular()">
+                    </div>
+                    <div class="input-group-calc">
+                        <label>Watts</label>
+                        <input type="number" id="watts" value="150" oninput="calcular()">
+                    </div>
+                </div>
+            </div>
+            <div class="card-calc">
+                <div class="card-title-calc"><span>Maquinaria</span></div>
+                <div class="row-calc">
+                    <div class="input-group-calc">
+                        <label>Valor Equipo</label>
+                        <input type="number" id="vMaq" value="480000" oninput="calcular()">
+                    </div>
+                    <div class="input-group-calc">
+                        <label>Vida (hs)</label>
+                        <input type="number" id="vUtil" value="6000" oninput="calcular()">
+                    </div>
+                </div>
+                <div class="input-group-calc">
+                    <label>Horas Uso Mes</label>
+                    <input type="number" id="hMes" value="300" oninput="calcular()">
+                </div>
+            </div>
+            <div class="card-calc">
+                <div class="card-title-calc"><span>El Trabajo</span></div>
+                <div class="row-calc">
+                    <div class="input-group-calc">
+                        <label>Horas Imp.</label>
+                        <input type="number" id="hImp" value="0" oninput="calcular()">
+                    </div>
+                    <div class="input-group-calc">
+                        <label>Min.</label>
+                        <input type="number" id="mImp" value="30" oninput="calcular()">
+                    </div>
+                </div>
+                <div class="input-group-calc">
+                    <label>Peso (Gramos)</label>
+                    <input type="number" id="peso" value="9" oninput="calcular()">
+                </div>
+                <div class="input-group-calc">
+                    <label>Margen</label>
+                    <select id="multi" onchange="calcular()">
+                        <option value="2.0">Mayorista (2.0x)</option>
+                        <option value="3.0" selected>Minorista (3.0x)</option>
+                        <option value="5.0">Premium (5.0x)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="results-panel-calc">
+            <div class="price-box">
+                <span style="font-size: 0.7em; color: #8b949e; text-transform: uppercase;">Precio Sugerido</span>
+                <span class="price-main" id="outFinal">$0.00</span>
+            </div>
+            <div class="stats-mini">
+                <div>Costo: <span id="outCostoTotal" style="color: #f85149;">$0</span></div>
+                <div>Ganancia: <span id="outProfit" style="color: #00ff88;">$0</span></div>
+            </div>
+            <button class="btn-calc" onclick="calcular()"><i class="fas fa-sync-alt"></i> Recalcular</button>
+        </div>
+    </div>
+    <script src="js/calculator.js"></script>
+</body>
+</html>
