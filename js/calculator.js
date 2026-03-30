@@ -46,4 +46,25 @@ if (typeof lucide !== 'undefined') {
     lucide.createIcons();
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const triggers = document.querySelectorAll('.info-trigger');
+    
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const tooltip = trigger.nextElementSibling;
+            
+            document.querySelectorAll('.tooltip').forEach(t => {
+                if (t !== tooltip) t.classList.remove('active');
+            });
+
+            tooltip.classList.toggle('active');
+        });
+    });
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.tooltip').forEach(t => t.classList.remove('active'));
+    });
+});
+
 window.onload = calcular;
