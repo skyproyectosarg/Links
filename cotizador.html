@@ -27,15 +27,29 @@
         .dashboard-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid var(--border); position: relative; }
         .card-title { font-size: 11px; text-transform: uppercase; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .info-trigger { color: var(--text-dim); cursor: help; display: flex; align-items: center; }
+        
+        .info-trigger { color: var(--text-dim); cursor: pointer; display: flex; align-items: center; padding: 4px; }
         .info-trigger:hover { color: var(--info); }
-        .tooltip { position: absolute; top: 40px; left: 10px; right: 10px; background: #27272a; color: #fff; padding: 12px; border-radius: 8px; font-size: 11px; line-height: 1.4; z-index: 50; display: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); border: 1px solid var(--border); pointer-events: none; }
-        .info-trigger:hover + .tooltip { display: block; }
+        
+        .tooltip { 
+            position: absolute; top: 45px; left: 10px; right: 10px; 
+            background: #27272a; color: #fff; padding: 15px; border-radius: 8px; 
+            font-size: 11px; line-height: 1.5; z-index: 100; display: none; 
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); border: 1px solid var(--border); 
+            pointer-events: none;
+        }
+        .tooltip b { color: var(--accent); display: block; margin-bottom: 4px; font-size: 12px; }
+        .tooltip i { color: var(--success); font-style: normal; font-weight: bold; }
+        
+        .info-trigger:hover + .tooltip, .tooltip.active { display: block; }
+        
         .input-group { margin-bottom: 10px; }
         label { display: block; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; font-weight: 500; }
         input, select { width: 100%; background: #09090b; border: 1px solid var(--border); color: white; padding: 8px; border-radius: 6px; font-size: 12px; }
+        input:focus { outline: none; border-color: var(--accent); }
         .row { display: flex; gap: 8px; }
         .row div { flex: 1; }
+        
         .results-panel { background: var(--card); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; display: grid; grid-template-columns: 1fr 320px; }
         .results-details { padding: 20px; border-right: 1px solid var(--border); }
         .results-hero { background: linear-gradient(135deg, rgba(159, 111, 255, 0.05), rgba(124, 58, 237, 0.1)); padding: 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -45,7 +59,8 @@
         .stat-value { font-size: 14px; font-weight: 700; }
         .price-main { font-size: 48px; font-weight: 900; color: var(--accent); margin: 5px 0; letter-spacing: -2px; }
         .ml-box { background: rgba(255, 255, 0, 0.05); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 0, 0.1); margin-top: 10px; width: 100%; text-align: center; }
-        .btn-calc { background: var(--accent); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-calc { background: var(--accent); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; }
+        
         @media (max-width: 1100px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) { .dashboard-grid { grid-template-columns: 1fr; } .results-panel { grid-template-columns: 1fr; } .results-details { border-right: none; border-bottom: 1px solid var(--border); } .stat-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
@@ -64,9 +79,15 @@
                 <span>Insumos</span>
                 <div class="info-trigger"><i data-lucide="info" width="14"></i></div>
                 <div class="tooltip">
-                    <b>kWh:</b> Consultá el costo en tu factura de luz. <br>
-                    <b>Watts:</b> 150W es el promedio de una Ender/Bambu. <br>
-                    <b>Falla:</b> Margen extra para cubrir purgas y piezas fallidas.
+                    <b>¿Qué es esto?</b>
+                    Aquí defines los costos básicos de materiales y energía.
+                    <br><br>
+                    <b>¿Qué ingresar?</b>
+                    - <i>Filamento:</i> El precio que pagaste por el rollo de 1KG.
+                    <br>
+                    - <i>kWh:</i> El costo de energía de tu factura (promedio $130 en Catamarca).
+                    <br>
+                    - <i>Tasa de fallos:</i> Margen para purgas o errores de impresión.
                 </div>
             </div>
             <div class="input-group">
@@ -85,8 +106,15 @@
                 <span>Maquinaria</span>
                 <div class="info-trigger"><i data-lucide="info" width="14"></i></div>
                 <div class="tooltip">
-                    <b>Amortización:</b> Ahorro para renovar la impresora. <br>
-                    <b>Gastos Fijos:</b> Sumá alquiler, internet e impuestos, y dividilo por las horas que usás la máquina al mes.
+                    <b>¿Para qué sirve?</b>
+                    Para asegurar que tu impresora se pague sola y tengas dinero para comprar una nueva en el futuro.
+                    <br><br>
+                    <b>¿Qué ingresar?</b>
+                    - <i>Valor Equipo:</i> Cuánto te costó la impresora.
+                    <br>
+                    - <i>Vida Útil:</i> Se recomiendan 6000hs para equipos hogareños.
+                    <br>
+                    - <i>Gastos Fijos:</i> Luz base, internet o software que uses al mes.
                 </div>
             </div>
             <div class="row">
@@ -102,8 +130,15 @@
                 <span>Mano de Obra</span>
                 <div class="info-trigger"><i data-lucide="info" width="14"></i></div>
                 <div class="tooltip">
-                    <b>Hora Técnica:</b> Tu tiempo de diseño o post-procesado. <br>
-                    <b>Mantenimiento:</b> Dinero destinado a repuestos (boquillas, correas, lubricante).
+                    <b>Tu tiempo vale:</b>
+                    Aquí cobras por el trabajo manual que NO hace la máquina (diseño, lijado, pintura).
+                    <br><br>
+                    <b>¿Qué ingresar?</b>
+                    - <i>Hora Técnica:</i> Cuánto quieres ganar por 1 hora de tu tiempo.
+                    <br>
+                    - <i>Preparación:</i> Minutos que tardaste en limpiar la pieza o armar el archivo.
+                    <br>
+                    - <i>Mantenimiento:</i> Un pequeño extra por cada hora de uso para cambiar boquillas o correas.
                 </div>
             </div>
             <div class="input-group"><label>Valor Hora Técnica</label><input type="number" id="vHH" value="0" oninput="calcular()"></div>
@@ -116,8 +151,11 @@
                 <span>El Trabajo</span>
                 <div class="info-trigger"><i data-lucide="info" width="14"></i></div>
                 <div class="tooltip">
-                    <b>Margen:</b> Es tu ganancia neta sobre los costos. <br>
-                    3.0x (Minorista) es el estándar recomendado para cubrir imprevistos y ganar dinero.
+                    <b>Datos del Slicer:</b>
+                    Carga aquí lo que te indica Bambu Studio, Orca o Cura antes de imprimir.
+                    <br><br>
+                    <b>Recomendación:</b>
+                    Usa un <i>Margen de 3.0x</i> para ventas minoristas. Esto cubre los costos y te deja una ganancia real para crecer.
                 </div>
             </div>
             <div class="row">
@@ -126,7 +164,7 @@
             </div>
             <div class="input-group"><label>Peso (Gramos)</label><input type="number" id="peso" value="0" oninput="calcular()"></div>
             <div class="input-group">
-                <label>Margen</label>
+                <label>Margen de Ganancia</label>
                 <select id="multi" onchange="calcular()">
                     <option value="1.5">Amigos (1.5x)</option>
                     <option value="2.0">Mayorista (2.0x)</option>
@@ -154,7 +192,7 @@
             </div>
         </div>
         <div class="results-hero">
-            <span style="font-size: 10px; color: var(--text-dim); text-transform: uppercase;">A cobrar al cliente</span>
+            <span style="font-size: 10px; color: var(--text-dim); text-transform: uppercase;">Precio Sugerido</span>
             <span class="price-main" id="outFinal">$0.00</span>
             <div class="ml-box">
                 <span style="font-size: 9px; color: #fef08a; text-transform: uppercase;">Precio Recomendado ML</span>
@@ -167,7 +205,9 @@
 
 <script>
     lucide.createIcons();
+
     function format(val) { return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(val); }
+
     function calcular() {
         const pKg = parseFloat(document.getElementById('precioKg').value) || 0;
         const ckwh = parseFloat(document.getElementById('ckwh').value) || 0;
@@ -186,14 +226,18 @@
         const multi = parseFloat(document.getElementById('multi').value) || 1;
         const mlP = parseFloat(document.getElementById('mlPerc').value) / 100 || 0;
         const mlF = parseFloat(document.getElementById('mlFijo').value) || 0;
+
         const tTotal = hImp + (mImp / 60);
+
         const costoMat = ((pKg / 1000) * peso) * (1 + fail);
         const costoElec = (watts / 1000) * tTotal * ckwh;
         const amortMant = ((vMaq / vUtil) + cMant) * tTotal;
         const laborFijos = ((vHH / 60) * tMan) + ((gFijos / hMes) * tTotal);
+
         const costoTotal = costoMat + costoElec + amortMant + laborFijos;
         const precioFinal = costoTotal * multi;
         const precioML = (precioFinal + mlF) / (1 - mlP);
+
         document.getElementById('outMat').innerText = format(costoMat);
         document.getElementById('outElec').innerText = format(costoElec);
         document.getElementById('outAmort').innerText = format(amortMant);
@@ -203,6 +247,24 @@
         document.getElementById('outFinal').innerText = format(precioFinal);
         document.getElementById('outML').innerText = format(precioML);
     }
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const triggers = document.querySelectorAll('.info-trigger');
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const tooltip = trigger.nextElementSibling;
+                document.querySelectorAll('.tooltip').forEach(t => { if (t !== tooltip) t.style.display = 'none'; });
+                const isVisible = tooltip.style.display === 'block';
+                tooltip.style.display = isVisible ? 'none' : 'block';
+            });
+        });
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.tooltip').forEach(t => { t.style.display = 'none'; });
+        });
+    });
+
     window.onload = calcular;
 </script>
 </body>
