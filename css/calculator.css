@@ -1,0 +1,15 @@
+.calc-internal-container { color: #f4f4f5; font-family: sans-serif; }
+.dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+.card-calc { background: #18181b; border: 1px solid #27272a; padding: 12px; border-radius: 10px; }
+.card-title-calc { color: #9f6fff; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; border-bottom: 1px solid #27272a; padding-bottom: 5px; }
+.input-group-calc { margin-bottom: 8px; }
+.input-group-calc label { display: block; font-size: 10px; color: #a1a1aa; margin-bottom: 3px; }
+.input-group-calc input, .input-group-calc select { width: 100%; background: #09090b; border: 1px solid #27272a; color: white; padding: 6px; border-radius: 5px; font-size: 12px; }
+.row-calc { display: flex; gap: 8px; }
+.results-panel-calc { background: linear-gradient(135deg, rgba(159, 111, 255, 0.1), rgba(124, 58, 237, 0.1)); margin-top: 15px; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #9f6fff44; }
+.price-main { display: block; font-size: 32px; font-weight: 900; color: #9f6fff; margin: 5px 0; }
+.label-final { font-size: 10px; text-transform: uppercase; color: #a1a1aa; }
+.stats-mini { display: flex; justify-content: space-around; font-size: 11px; margin-bottom: 10px; color: #a1a1aa; }
+.btn-calc { width: 100%; background: #9f6fff; color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+
+@media (min-width: 600px) { .dashboard-grid { grid-template-columns: repeat(3, 1fr); } }
