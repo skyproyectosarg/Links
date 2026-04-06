@@ -5,17 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sky Toolbox - Calibrador Maestro</title>
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://raw.githubusercontent.com; border-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://unpkg.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://raw.githubusercontent.com; worker-src blob:; border-src 'self';">
 
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" crossorigin></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0a0f18; color: #f1f5f9; font-size: 16px; }
+        body { font-family: 'Inter', sans-serif; background-color: #0a0f18; color: #f1f5f9; font-size: 16px; margin: 0; }
+        #root { min-height: 100vh; }
+        /* Estilos para el estado de carga inicial */
+        .loader-init { display: flex; justify-center: center; align-items: center; height: 100vh; font-weight: bold; color: #8b5cf6; text-transform: uppercase; letter-spacing: 0.1em; }
+        
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         .violet-glow { box-shadow: 0 0 40px rgba(139, 92, 246, 0.08); }
@@ -28,41 +32,38 @@
             padding-right: 2.5rem; 
             appearance: none; 
         }
-        .tech-tooltip {
-            width: 320px;
-            max-width: 85vw;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: normal;
-            word-wrap: break-word;
-            filter: drop-shadow(0 10px 25px rgba(0,0,0,0.9));
-            font-size: 13px;
-        }
-        @media (max-width: 640px) {
-            .tech-tooltip {
-                width: 260px;
-            }
-        }
+        .tech-tooltip { width: 320px; max-width: 85vw; left: 50%; transform: translateX(-50%); white-space: normal; word-wrap: break-word; filter: drop-shadow(0 10px 25px rgba(0,0,0,0.9)); font-size: 13px; }
+        @media (max-width: 640px) { .tech-tooltip { width: 260px; } }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root">
+        <div class="loader-init italic animate-pulse text-center w-full">
+            Iniciando Sky Toolbox...
+        </div>
+    </div>
 
     <script type="text/babel">
         const { useState, useEffect, useCallback, useRef } = React;
 
         const materialsList = ['PLA', 'PETG', 'ABS', 'ASA', 'TPU', 'PET', 'NYLON', 'PC', 'Otros'];
 
-        // Componente de Icono corregido para no romper el DOM de React
+        // Componente de Icono ultra-seguro
         const Icon = ({ name, size = 20, className = "" }) => {
             const iconRef = useRef(null);
+            
             useEffect(() => {
-                if (window.lucide && iconRef.current) {
-                    window.lucide.createIcons({
-                        icons: { [name]: window.lucide.icons[name] },
-                        nameAttr: 'data-lucide'
-                    });
-                }
+                const timer = setTimeout(() => {
+                    if (window.lucide && iconRef.current) {
+                        try {
+                            window.lucide.createIcons({
+                                icons: { [name]: window.lucide.icons[name] },
+                                nameAttr: 'data-lucide'
+                            });
+                        } catch (e) { console.error("Error cargando icono:", name); }
+                    }
+                }, 100);
+                return () => clearTimeout(timer);
             }, [name]);
 
             return <i 
