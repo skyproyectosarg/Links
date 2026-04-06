@@ -5,15 +5,14 @@ body {
     background-color: #0a0f18; 
     color: #f1f5f9; 
     font-size: 16px; 
-    margin: 0; 
-    overflow-x: hidden;
 }
-
-#root { min-height: 100vh; }
 
 input::-webkit-outer-spin-button, 
 input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
 input[type=number] { -moz-appearance: textfield; }
+
+.violet-glow { box-shadow: 0 0 40px rgba(139, 92, 246, 0.08); }
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
@@ -26,18 +25,19 @@ select {
     appearance: none; 
 }
 
-.tech-tooltip { 
-    width: 320px; 
-    max-width: 85vw; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    white-space: normal; 
-    word-wrap: break-word; 
-    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.9)); 
-    font-size: 13px; 
-    z-index: 100;
+.tech-tooltip {
+    width: 320px;
+    max-width: 85vw;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: normal;
+    word-wrap: break-word;
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.9));
+    font-size: 13px;
 }
 
-@media (max-width: 640px) { 
-    .tech-tooltip { width: 260px; } 
+@media (max-width: 640px) {
+    .tech-tooltip {
+        width: 260px;
+    }
 }
