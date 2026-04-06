@@ -17,15 +17,13 @@
 </head>
 <body>
     <div id="root">
-        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; color: #8b5cf6; font-family: sans-serif; font-weight: bold; background: #0a0f18;">
+        <div class="loader-init">
             <div style="text-align: center;">
-                <p style="margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;">Cargando Búnker...</p>
-                <div style="width: 40px; height: 40px; border: 4px solid #8b5cf6; border-top: 4px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                <p style="margin-bottom: 15px; letter-spacing: 3px; font-weight: 900;">INICIANDO BÚNKER</p>
+                <div class="spinner"></div>
             </div>
         </div>
     </div>
-
-    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
 
     <script src="js/toolbox-app.js" type="text/babel" data-presets="react"></script>
 </body>
