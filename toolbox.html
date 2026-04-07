@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyDev Toolbox | Ingeniería y 3D</title>
+    <link rel="stylesheet" href="css/toolbox.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="sky-nav">
+        <div class="sky-logo">SKYDEV <span class="accent">TOOLBOX</span></div>
+    </nav>
+
+    <main class="sky-container">
+        <div id="home-view">
+            <header class="sky-header">
+                <h1>Panel de Herramientas</h1>
+                <p>Utilidades de precisión para Sky 3D, electrónica y desarrollo.</p>
+            </header>
+
+            <div class="sky-grid">
+                <div class="sky-card" onclick="showTool('calc3d')">
+                    <div class="icon">🚀</div>
+                    <h3>SkyScale 3D</h3>
+                    <p>Cotizador de filamentos (PLA, PETG-CF, ABS).</p>
+                </div>
+
+                <div class="sky-card" onclick="showTool('diametro')">
+                    <div class="icon">📏</div>
+                    <h3>Cálculo de Diámetro</h3>
+                    <p>Conversión técnica de perímetro a diámetro.</p>
+                </div>
+
+                <div class="sky-card disabled">
+                    <div class="icon">🔋</div>
+                    <h3>Power Starlink</h3>
+                    <p>Cálculo de autonomía y celdas 18650.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="tool-view" class="sky-tool-area hidden">
+            <button class="sky-btn-back" onclick="goHome()">← Volver al Panel</button>
+            <div id="tool-render"></div>
+        </div>
+    </main>
+
+    <script src="js/toolbox.js"></script>
+</body>
+</html>
