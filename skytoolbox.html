@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sky Toolbox - Calibrador Maestro</title>
 
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.tailwindcss.com blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://sky3d.com.ar https://raw.githubusercontent.com; connect-src 'self' https:; worker-src blob:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://sky3d.com.ar; connect-src 'self' https:;">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -19,21 +19,14 @@
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b5cf6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.75rem center;
-            background-repeat: no-repeat;
-            background-size: 1.25em 1.25em;
-            padding-right: 2.5rem;
-            appearance: none;
-        }
-        .tooltip-box { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 10px; width: 280px; max-width: 80vw; padding: 12px 16px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; color: #e2e8f0; z-index: 100; line-height: 1.6; font-size: 13px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); white-space: normal; word-wrap: break-word; }
-        .btn-nav { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s; }
-        .btn-nav.active { background: #8b5cf6; color: white; }
-        .btn-nav.inactive { background: transparent; color: #94a3b8; }
-        .sb-btn { display: flex; align-items: center; gap: 12px; padding: 13px 15px; border-radius: 10px; font-weight: 700; font-size: 13px; text-transform: uppercase; cursor: pointer; width: 100%; border: none; transition: all 0.2s; }
+        select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b5cf6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 0.75rem center; background-repeat: no-repeat; background-size: 1.25em 1.25em; padding-right: 2.5rem; appearance: none; }
+        .tech-tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 10px; width: 300px; max-width: 85vw; padding: 14px; background: #0f172a; border: 1px solid #334155; border-radius: 14px; color: #e2e8f0; z-index: 100; line-height: 1.6; font-size: 13px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); white-space: normal; word-wrap: break-word; }
+        .nav-btn { padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
+        .nav-btn.active { background: #8b5cf6; color: white; }
+        .nav-btn.inactive { background: transparent; color: #64748b; }
+        .sb-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 12px; font-weight: 700; font-size: 13px; text-transform: uppercase; cursor: pointer; width: 100%; border: none; transition: 0.2s; }
         .sb-btn.active { background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.5); color: #8b5cf6; }
-        .sb-btn.inactive { background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; }
+        .sb-btn.inactive { background: #0f172a; border: 1px solid #1e293b; color: #64748b; }
     </style>
 </head>
 <body>
@@ -57,7 +50,7 @@
             'zap': 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
             'maximize': 'M8 3H5a2 2 0 0 0-2 2v3|M21 8V5a2 2 0 0 0-2-2h-3|M3 16v3a2 2 0 0 0 2 2h3|M16 21h3a2 2 0 0 0 2-2v-3',
             'cpu': 'M9 3H5a2 2 0 0 0-2 2v4|M15 3h4a2 2 0 0 1 2 2v4|M9 21H5a2 2 0 0 1-2-2v-4|M15 21h4a2 2 0 0 0 2-2v-4|M9 9h6v6H9z',
-            'clipboard': 'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2 2H2|M9 2h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z',
+            'clipboard': 'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2|M9 2h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z',
             'check-circle-2': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z|M7 12l3 3 7-7',
             'save': 'M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z|M17 21v-8H7v8|M7 3v5h8',
             'rotate-ccw': 'M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8|M3 3v5h5',
@@ -81,7 +74,7 @@
 
         function TechInfo(p) {
             var s = useState(false); var show = s[0], setShow = s[1];
-            return h('span', { style: { position: 'relative', display: 'inline-block', cursor: 'help', borderBottom: '1px dashed ' + PURPLE, color: 'white', fontWeight: 'bold', padding: '0 3px' }, onMouseEnter: function() { setShow(true); }, onMouseLeave: function() { setShow(false); }, onClick: function() { setShow(!show); } }, p.term, show && h('span', { className: 'tooltip-box' }, h('span', { style: { display: 'block', color: PURPLE, fontWeight: '900', fontSize: '11px', marginBottom: '6px' } }, p.term), p.info));
+            return h('span', { style: { position: 'relative', display: 'inline-block', cursor: 'help', borderBottom: '1px dashed ' + PURPLE, color: 'white', fontWeight: 'bold', padding: '0 3px' }, onMouseEnter: function() { setShow(true); }, onMouseLeave: function() { setShow(false); }, onClick: function() { setShow(!show); } }, p.term, show && h('span', { className: 'tech-tooltip' }, h('span', { style: { display: 'block', color: PURPLE, fontWeight: '900', fontSize: '11px', marginBottom: '6px', textTransform: 'uppercase' } }, p.term), p.info));
         }
 
         function InputGroup(p) {
@@ -128,14 +121,12 @@
 
             function goToHelp(calcId) {
                 var map = { flow: 1, pa: 2, vol: 3, vfa: 4, shrink: 6 };
-                setActiveTab('guide');
-                setExpandedStep(map[calcId] !== undefined ? map[calcId] : 0);
+                setActiveTab('guide'); setExpandedStep(map[calcId] || 0);
             }
 
             function saveToHistory() {
-                var res = getRes();
-                var item = { id: Date.now(), type: activeCalc.toUpperCase(), material: material, value: res + (activeCalc === 'shrink' ? '%' : ''), date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
-                setHistory(function(prev) { return [item].concat(prev).slice(0, 10); });
+                var item = { id: Date.now(), type: activeCalc.toUpperCase(), material: material, value: getRes() + (activeCalc === 'shrink' ? '%' : ''), date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+                setHistory(function(p) { return [item].concat(p).slice(0, 10); });
                 setSaved(true); setTimeout(function() { setSaved(false); }, 1500);
             }
 
@@ -150,54 +141,59 @@
                 order: 'El Scarf Seam requiere paredes internas previas. Usa siempre el orden Interior > Exterior.'
             };
 
-            var guideItems = [
-                { title: "1. Torre de Temperatura", icon: 'thermometer', content: h('div', null, h('p', { style: { marginBottom: '12px', fontWeight: '600' } }, 'Conocé el límite térmico del polímero antes de tocar flujos o velocidades.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px', fontSize: '14px' } }, '• PLA: 190-230C | PETG: 235-260C | ABS/ASA: 245-275C.', h('br'), '• Iniciá en el máximo y bajá cada 5C. La ideal mantiene adhesión irrompible.')) },
-                { title: "2. Relación de Flujo (Flow Ratio)", icon: 'activity', content: h('div', null, h('p', { style: { marginBottom: '12px' } }, 'Ajusta el volumen real de plástico respecto al comando del Slicer.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, '• Pass 1: Imprimí bloques de -20 a +10. Buscá superficie 100% cerrada.', h('br'), '• Pass 2: Ajuste fino de -9 a +1 para superficies perfectas.')) },
-                { title: "3. Avance de Presión (PA)", icon: 'settings-2', content: h('div', null, h('p', { style: { marginBottom: '12px' } }, 'Compensa la elasticidad para esquinas perfectas.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, '• Direct Drive: 0.012 - 0.045 | Bowden: 0.12 - 0.55.', h('br'), '• Elimina esquinas abultadas y evita hilos al final de perímetros.')) },
-                { title: "4. Límite de Velocidad Volumétrica", icon: 'gauge', content: h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, h('p', null, h(TechInfo, { term: 'Hotend V6', info: tips.v6 }), ': 12-15 mm3/s'), h('p', null, h(TechInfo, { term: 'Volcano', info: tips.volcano }), ': 24-32 mm3/s'), h('p', null, h(TechInfo, { term: 'Bambu Lab', info: tips.bambu }), ': 28-36 mm3/s')) },
-                { title: "5. Vibraciones (VFA)", icon: 'zap', content: h('div', null, h('p', null, 'Vertical Fine Artifacts: marcas visuales por resonancia.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, 'Identificá la velocidad donde la pared parece un espejo liso y usala en perímetros.')) },
-                { title: "6. Costuras (Scarf Seams)", icon: 'sparkles', content: h('div', null, h('p', null, 'Tecnología para borrar la cicatriz Z mediante rampas.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, 'Scarf Flow: 100% ideal. Requiere orden: ', h(TechInfo, { term: 'Interior-Exterior', info: tips.order }))) },
-                { title: "7. Encogimiento y Escala", icon: 'maximize', content: h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, h('p', null, 'Compensación por contracción térmica fría.'), h('p', null, 'PLA/PETG: 0.2% | ABS/ASA: 0.8% | Nylon/PC: 1.5%.')) },
-                { title: "8. Humedad y Secado", icon: 'wind', content: h('div', null, h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' } }, h('button', { onClick: function() { setSymptom('s'); }, style: { padding: '10px', borderRadius: '8px', background: symptom === 's' ? PURPLE : '#1e293b', color: 'white' } }, 'Velo'), h('button', { onClick: function() { setSymptom('p'); }, style: { padding: '10px', borderRadius: '8px', background: symptom === 'p' ? PURPLE : '#1e293b', color: 'white' } }, 'Popping')), symptom && h('p', { style: { fontStyle: 'italic', fontSize: '13px' } }, symptom === 's' ? 'Puede ser PA o humedad leve.' : 'HUMEDAD CRÍTICA. Secado obligatorio inmediato.')) }
+            var dryingData = [
+                { mat: 'PLA', temp: '45-50C', time: '4-6h' },
+                { mat: 'PETG', temp: '60-65C', time: '6-8h' },
+                { mat: 'ABS/ASA', temp: '70-80C', time: '6h+' },
+                { mat: 'Nylon/TPU', temp: '75-85C', time: '12h+' }
             ];
 
-            return h('div', { style: { minHeight: '100vh', background: '#0a0f18', color: '#f1f5f9' } },
-                h('div', { style: { maxWidth: '960px', margin: '0 auto', padding: '24px 16px' } },
-                    h('header', { style: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', borderBottom: '1px solid #1e293b', paddingBottom: '24px', marginBottom: '32px' } },
-                        h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px' } },
-                            h('div', { style: { width: '50px', height: '50px', background: PURPLE, borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' } }, h(Icon, { name: 'layers', size: 26 })),
-                            h('div', null, h('h1', { style: { fontSize: '30px', fontWeight: '900', fontStyle: 'italic', margin: 0 } }, 'Sky Toolbox'), h('p', { style: { color: '#64748b', fontSize: '11px', fontWeight: '700' } }, 'HERRAMIENTAS PARA MAKERS'))),
-                        h('nav', { style: { display: 'flex', background: 'rgba(15,23,42,0.8)', padding: '5px', borderRadius: '12px', border: '1px solid #1e293b' } },
-                            h('button', { className: 'btn-nav ' + (activeTab === 'calculators' ? 'active' : 'inactive'), onClick: function() { setActiveTab('calculators'); } }, 'Calculadoras'),
-                            h('button', { className: 'btn-nav ' + (activeTab === 'guide' ? 'active' : 'inactive'), onClick: function() { setActiveTab('guide'); } }, 'Ayuda'))),
-                    activeTab === 'calculators' ? h('div', { style: { display: 'grid', gridTemplateColumns: 'minmax(180px, 220px) 1fr', gap: '20px' } },
-                        h('div', null,
-                            h('div', { style: { background: 'rgba(15,23,42,0.5)', padding: '14px', borderRadius: '12px', border: '1px solid #1e293b', marginBottom: '12px' } },
-                                h('label', { style: { display: 'block', fontSize: '10px', fontWeight: '900', color: '#64748b', fontStyle: 'italic' } }, 'Filamento:'),
-                                h('select', { value: material, onChange: function(e) { setMaterial(e.target.value); }, style: { width: '100%', background: '#020617', border: '1px solid #1e293b', borderRadius: '8px', padding: '9px 12px', color: 'white', cursor: 'pointer' } },
-                                    materialsList.map(function(m) { return h('option', { key: m, value: m }, m); }))),
-                            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
-                                [ {id:'flow',l:'Flujo',i:'activity'}, {id:'pa',l:'Presion (PA)',i:'settings-2'}, {id:'vol',l:'Caudal',i:'gauge'}, {id:'vfa',l:'VFA',i:'zap'}, {id:'shrink',l:'Escala',i:'maximize'} ].map(function(c) {
-                                    return h('button', { key: c.id, className: 'sb-btn ' + (activeCalc === c.id ? 'active' : 'inactive'), onClick: function() { setActiveCalc(c.id); } }, h(Icon, { name: c.i, size: 17 }), c.l);
-                                }))),
-                        h('div', null,
-                            h('div', { style: { background: 'rgba(15,23,42,0.5)', border: '1px solid #1e293b', borderRadius: '18px', padding: '24px' } },
-                                h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' } },
-                                    h('div', null,
-                                        h('h3', { style: { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '16px', fontWeight: '800', fontStyle: 'italic', marginBottom: '20px' } }, h(Icon, { name: 'cpu', style: { color: PURPLE } }), 'Datos'),
-                                        activeCalc === 'flow' && h(React.Fragment, null, h(InputGroup, { label: 'Flujo Actual', value: flowData.current, onChange: function(v) { setFlowData({ current: v, modifier: flowData.modifier }); } }), h(InputGroup, { label: 'Modificador', value: flowData.modifier, onChange: function(v) { setFlowData({ current: flowData.current, modifier: v }); } })),
-                                        activeCalc === 'pa' && h(React.Fragment, null, h(InputGroup, { label: 'Valor Inicial', value: paData.start, onChange: function(v) { setPaData({ start: v, step: paData.step, height: paData.height }); } }), h(InputGroup, { label: 'Paso', value: paData.step, onChange: function(v) { setPaData({ start: paData.start, step: v, height: paData.height }); } }), h(InputGroup, { label: 'Altura', value: paData.height, onChange: function(v) { setPaData({ start: paData.start, step: paData.step, height: v }); } })),
-                                        activeCalc === 'vol' && h(React.Fragment, null, h(InputGroup, { label: 'Inicio', value: volData.start, onChange: function(v) { setVolData({ start: v, step: volData.step, height: volData.height }); } }), h(InputGroup, { label: 'Paso', value: volData.step, onChange: function(v) { setVolData({ start: volData.start, step: v, height: volData.height }); } }), h(InputGroup, { label: 'Fallo', value: volData.height, onChange: function(v) { setVolData({ start: volData.start, step: volData.step, height: v }); } })),
-                                        activeCalc === 'vfa' && h(React.Fragment, null, h(InputGroup, { label: 'Velocidad', value: vfaData.start, onChange: function(v) { setVfaData({ start: v, step: vfaData.step, level: vfaData.level }); } }), h(InputGroup, { label: 'Incremento', value: vfaData.step, onChange: function(v) { setVfaData({ start: vfaData.start, step: v, level: vfaData.level }); } }), h(InputGroup, { label: 'Nivel', value: vfaData.level, onChange: function(v) { setVfaData({ start: vfaData.start, step: vfaData.step, level: v }); } })),
-                                        activeCalc === 'shrink' && h(React.Fragment, null, h(InputGroup, { label: 'Slicer', value: shrinkData.target, onChange: function(v) { setShrinkData({ target: v, measured: shrinkData.measured }); } }), h(InputGroup, { label: 'Real', value: shrinkData.measured, onChange: function(v) { setShrinkData({ target: shrinkData.target, measured: v }); } }))),
-                                    h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' } },
-                                        h('p', { style: { color: PURPLE, fontSize: '11px', fontWeight: '900' } }, 'Sugerido'),
-                                        h('button', { onClick: function() { goToHelp(activeCalc); }, style: { fontSize: '11px', color: '#475569', background: 'none', border: 'none', cursor: 'pointer', marginBottom: '16px' } }, 'Ver manual'),
-                                        h('div', { style: { fontSize: '64px', fontWeight: '900', color: 'white' } }, getRes(), activeCalc === 'shrink' && '%'),
-                                        h('div', { style: { display: 'flex', gap: '8px', marginTop: '20px' } },
-                                            h('button', { onClick: copyRes, style: { padding: '12px 24px', borderRadius: '10px', border: 'none', background: copied ? '#16a34a' : PURPLE, color: 'white', fontWeight: '700', cursor: 'pointer' } }, copied ? 'Listo!' : 'Copiar'),
-                                            h('button', { onClick: saveToHistory, style: { padding: '12px 16px', borderRadius: '10px', border: '1px solid #334155', background: saved ? '#16a34a' : '#1e293b', color: 'white', cursor: 'pointer' } }, h(Icon, { name: saved ? 'check-circle-2' : 'save', size: 18 }))))))))
-                    : h('div', null, guideItems.map(function(s, i) { return h(DocStep, { key: i, title: s.title, iconName: s.icon, badge: 'Guia Tecnica', expanded: expandedStep === i, onClick: function() { setExpandedStep(expandedStep === i ? -1 : i); } }, s.content); }))));
+            var guideItems = [
+                { title: "1. Torre de Temperatura", icon: 'thermometer', content: h('div', null, h('p', { style: { marginBottom: '12px', fontWeight: '600' } }, 'Base de toda calibración exitosa. Conocé el límite térmico del polímero.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px', fontSize: '14px' } }, 'PLA: 190-230C | PETG: 235-260C | ABS: 245-275C. Inicie al máximo recomendado y baje de a 5C.')) },
+                { title: "2. Relación de Flujo (Flow Ratio)", icon: 'activity', content: h('div', null, h('p', { style: { marginBottom: '12px' } }, 'Ajusta el volumen real de plástico respecto al comando del Slicer.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, 'Pass 1: Imprima bloques de -20 a +10. Busque el que tenga la superficie 100% cerrada pero sin rebabas.')) },
+                { title: "3. Avance de Presión (PA)", icon: 'settings-2', content: h('div', null, h('p', { style: { marginBottom: '12px' } }, 'Compensa la elasticidad del filamento para esquinas perfectas.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, 'Direct Drive: 0.012 - 0.045 | Bowden: 0.12 - 0.55. Elimina esquinas abultadas.')) },
+                { title: "4. Límite de Velocidad Volumétrica", icon: 'gauge', content: h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, h('p', null, h(TechInfo, { term: 'Hotend V6', info: tips.v6 }), ': 12-15 mm3/s'), h('p', null, h(TechInfo, { term: 'Hotend Volcano', info: tips.volcano }), ': 24-32 mm3/s'), h('p', null, h(TechInfo, { term: 'Bambu Lab HF', info: tips.bambu }), ': 28-36 mm3/s')) },
+                { title: "5. Vibraciones (VFA)", icon: 'zap', content: h('div', null, h('p', null, 'Vertical Fine Artifacts: marcas visuales por resonancia.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, 'Identifique la velocidad donde la pared parece un espejo liso y úsela en perímetros externos.')) },
+                { title: "6. Costuras (Scarf Seams)", icon: 'sparkles', content: h('div', null, h('p', null, 'Tecnología para borrar la cicatriz Z mediante rampas.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, 'Scarf Flow: 100% ideal. Requiere orden: ', h(TechInfo, { term: 'Interior-Exterior', info: tips.order }))) },
+                { title: "7. Encogimiento y Escala", icon: 'maximize', content: h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, h('p', null, 'Física de polímeros vs configuración.'), h('p', null, 'PLA: 0.2% | ABS/ASA: 0.8% | Nylon/PC: 1.5%.')) },
+                { title: "8. Humedad y Secado", icon: 'wind', content: h('div', null, h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '14px' } }, h('button', { onClick: function() { setSymptom('s'); }, style: { padding: '12px', borderRadius: '10px', background: symptom === 's' ? PURPLE : '#1e293b', color: 'white', fontWeight: 'bold' } }, 'Velo'), h('button', { onClick: function() { setSymptom('p'); }, style: { padding: '12px', borderRadius: '10px', background: symptom === 'p' ? PURPLE : '#1e293b', color: 'white', fontWeight: 'bold' } }, 'Popping')), symptom && h('p', { style: { fontStyle: 'italic', fontSize: '13px' } }, symptom === 's' ? 'Puede ser PA o humedad leve.' : 'HUMEDAD CRÍTICA. Secado inmediato.'), h('div', { style: { borderRadius: '10px', border: '1px solid #1e293b', overflow: 'hidden', marginTop: '12px' } }, h('table', { style: { width: '100%', fontSize: '13px' } }, h('tbody', null, dryingData.map(function(r, i) { return h('tr', { key: i, style: { borderTop: '1px solid #1e293b' } }, h('td', { style: { padding: '10px', color: PURPLE, fontWeight: '700' } }, r.mat), h('td', { style: { padding: '10px' } }, r.temp), h('td', { style: { padding: '10px' } }, r.time)); })))))) }
+            ];
+
+            return h('div', { style: { maxWidth: '960px', margin: '0 auto', padding: '24px 16px' } },
+                h('header', { style: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', borderBottom: '1px solid #1e293b', paddingBottom: '24px', marginBottom: '32px' } },
+                    h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px' } },
+                        h('div', { style: { width: '50px', height: '50px', background: PURPLE, borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' } }, h(Icon, { name: 'layers', size: 26 })),
+                        h('div', null, h('h1', { style: { fontSize: '30px', fontWeight: '900', fontStyle: 'italic', margin: 0 } }, 'Sky Toolbox'), h('p', { style: { color: '#64748b', fontSize: '11px', fontWeight: '700' } }, 'HERRAMIENTAS PARA MAKERS'))),
+                    h('nav', { style: { display: 'flex', background: 'rgba(15,23,42,0.8)', padding: '5px', borderRadius: '12px', border: '1px solid #1e293b' } },
+                        h('button', { className: 'nav-btn ' + (activeTab === 'calculators' ? 'active' : 'inactive'), onClick: function() { setActiveTab('calculators'); } }, 'Calculadoras'),
+                        h('button', { className: 'nav-btn ' + (activeTab === 'guide' ? 'active' : 'inactive'), onClick: function() { setActiveTab('guide'); } }, 'Ayuda'))),
+                activeTab === 'calculators' ? h('div', { style: { display: 'grid', gridTemplateColumns: 'minmax(180px, 220px) 1fr', gap: '20px' } },
+                    h('div', null,
+                        h('div', { style: { background: 'rgba(15,23,42,0.5)', padding: '14px', borderRadius: '12px', border: '1px solid #1e293b', marginBottom: '12px' } },
+                            h('label', { style: { display: 'block', fontSize: '10px', fontWeight: '900', color: '#64748b', fontStyle: 'italic' } }, 'Filamento:'),
+                            h('select', { value: material, onChange: function(e) { setMaterial(e.target.value); }, style: { width: '100%', background: '#020617', border: '1px solid #1e293b', borderRadius: '8px', padding: '9px 12px', color: 'white' } },
+                                materialsList.map(function(m) { return h('option', { key: m, value: m }, m); }))),
+                        h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+                            sidebarItems.map(function(c) { return h('button', { key: c.id, className: 'sb-btn ' + (activeCalc === c.id ? 'active' : 'inactive'), onClick: function() { setActiveCalc(c.id); } }, h(Icon, { name: c.icon, size: 17 }), c.label); }))),
+                    h('div', null,
+                        h('div', { style: { background: 'rgba(15,23,42,0.5)', border: '1px solid #1e293b', borderRadius: '18px', padding: '24px' } },
+                            h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' } },
+                                h('div', null,
+                                    h('h3', { style: { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '16px', fontWeight: '800', fontStyle: 'italic', marginBottom: '20px' } }, h(Icon, { name: 'cpu', style: { color: PURPLE } }), 'Datos'),
+                                    activeCalc === 'flow' && h(Fragment, null, h(InputGroup, { label: 'Flujo Actual', value: flowData.current, onChange: function(v) { setFlowData({ current: v, modifier: flowData.modifier }); } }), h(InputGroup, { label: 'Modificador', value: flowData.modifier, onChange: function(v) { setFlowData({ current: flowData.current, modifier: v }); } })),
+                                    activeCalc === 'pa' && h(Fragment, null, h(InputGroup, { label: 'Valor Inicial', value: paData.start, onChange: function(v) { setPaData({ start: v, step: paData.step, height: paData.height }); } }), h(InputGroup, { label: 'Paso', value: paData.step, onChange: function(v) { setPaData({ start: paData.start, step: v, height: paData.height }); } }), h(InputGroup, { label: 'Altura', value: paData.height, onChange: function(v) { setPaData({ start: paData.start, step: paData.step, height: v }); } })),
+                                    activeCalc === 'vol' && h(Fragment, null, h(InputGroup, { label: 'Inicio', value: volData.start, onChange: function(v) { setVolData({ start: v, step: volData.step, height: volData.height }); } }), h(InputGroup, { label: 'Altura Fallo', value: volData.height, onChange: function(v) { setVolData({ start: volData.start, step: volData.step, height: v }); } })),
+                                    activeCalc === 'vfa' && h(Fragment, null, h(InputGroup, { label: 'Velocidad', value: vfaData.start, onChange: function(v) { setVfaData({ start: v, step: vfaData.step, level: vfaData.level }); } }), h(InputGroup, { label: 'Incremento', value: vfaData.step, onChange: function(v) { setVfaData({ start: vfaData.start, step: v, level: vfaData.level }); } })),
+                                    activeCalc === 'shrink' && h(Fragment, null, h(InputGroup, { label: 'Slicer', value: shrinkData.target, onChange: function(v) { setShrinkData({ target: v, measured: shrinkData.measured }); } }), h(InputGroup, { label: 'Real', value: shrinkData.measured, onChange: function(v) { setShrinkData({ target: shrinkData.target, measured: v }); } }))),
+                                h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' } },
+                                    h('p', { style: { color: PURPLE, fontSize: '11px', fontWeight: '900' } }, 'Sugerido'),
+                                    h('button', { onClick: function() { goToHelp(activeCalc); }, style: { fontSize: '11px', color: '#475569', background: 'none', border: 'none', cursor: 'pointer', marginBottom: '16px' } }, 'Ver manual'),
+                                    h('div', { style: { fontSize: '64px', fontWeight: '900', color: 'white' } }, getRes(), activeCalc === 'shrink' && '%'),
+                                    h('div', { style: { display: 'flex', gap: '8px', marginTop: '20px' } },
+                                        h('button', { onClick: copyRes, style: { padding: '12px 24px', borderRadius: '10px', border: 'none', background: copied ? '#16a34a' : PURPLE, color: 'white', fontWeight: '700', cursor: 'pointer' } }, copied ? 'Listo!' : 'Copiar'),
+                                        h('button', { onClick: saveToHistory, style: { padding: '12px 16px', borderRadius: '10px', border: '1px solid #334155', background: saved ? '#16a34a' : '#1e293b', color: 'white', cursor: 'pointer' } }, h(Icon, { name: saved ? 'check-circle-2' : 'save', size: 18 }))))))))
+                : h('div', null, guideItems.map(function(s, i) { return h(DocStep, { key: i, title: s.title, iconName: s.icon, badge: 'Guia Tecnica', expanded: expandedStep === i, onClick: function() { setExpandedStep(expandedStep === i ? -1 : i); } }, s.content); }))
+            );
         }
 
         ReactDOM.createRoot(document.getElementById('root')).render(h(App));
