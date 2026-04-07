@@ -4,16 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sky Toolbox - Calibrador Maestro</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdnjs.cloudflare.com https://cdn.tailwindcss.com blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://sky3d.com.ar https://raw.githubusercontent.com; connect-src 'self' https:; worker-src blob:;">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0a0f18; color: #f1f5f9; font-size: 16px; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #0a0f18; color: #f1f5f9; font-size: 16px; margin: 0; padding: 0; overflow-x: hidden; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        .violet-glow { box-shadow: 0 0 40px rgba(139, 92, 246, 0.08); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         select {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b5cf6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
@@ -23,465 +27,181 @@
             padding-right: 2.5rem;
             appearance: none;
         }
-        .tech-tooltip {
-            width: 320px;
-            max-width: 85vw;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: normal;
-            word-wrap: break-word;
-            filter: drop-shadow(0 10px 25px rgba(0,0,0,0.9));
-            font-size: 13px;
-        }
-        @media (max-width: 640px) {
-            .tech-tooltip { width: 260px; }
-        }
+        .tooltip-box { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 10px; width: 280px; max-width: 80vw; padding: 12px 16px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; color: #e2e8f0; z-index: 100; line-height: 1.6; font-size: 13px; box-shadow: 0 10px 25px rgba(0,0,0,0.9); white-space: normal; word-wrap: break-word; }
+        .btn-nav { padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: background 0.2s; }
+        .btn-nav.active { background: #8b5cf6; color: white; }
+        .btn-nav.inactive { background: transparent; color: #94a3b8; }
+        .sb-btn { display: flex; align-items: center; gap: 12px; padding: 13px 15px; border-radius: 10px; font-weight: 700; font-size: 13px; text-transform: uppercase; cursor: pointer; width: 100%; border: none; transition: all 0.2s; }
+        .sb-btn.active { background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.5); color: #8b5cf6; }
+        .sb-btn.inactive { background: #0f172a; border: 1px solid #1e293b; color: #94a3b8; }
     </style>
 </head>
 <body>
     <div id="root"></div>
+
     <script>
-        const { useState, useEffect, useCallback, useRef } = React;
-        const h = React.createElement;
+    (function() {
+        'use strict';
+        var h = React.createElement;
+        var useState = React.useState;
+        var useEffect = React.useEffect;
+        var useCallback = React.useCallback;
+        var PURPLE = '#8b5cf6';
+        var materialsList = ['PLA', 'PETG', 'ABS', 'ASA', 'TPU', 'PET', 'NYLON', 'PC', 'Otros'];
 
-        const materialsList = ['PLA', 'PETG', 'ABS', 'ASA', 'TPU', 'PET', 'NYLON', 'PC', 'Otros'];
-
-        const Icon = ({ name, size = 20, className = "" }) => {
-            const iconRef = useRef(null);
-            useEffect(() => {
-                if (window.lucide && iconRef.current) {
-                    window.lucide.createIcons({
-                        icons: { [name]: window.lucide.icons[name] },
-                        nameAttr: 'data-lucide'
-                    });
-                }
-            }, [name]);
-            return h('i', {
-                ref: iconRef,
-                'data-lucide': name,
-                style: { width: size, height: size, display: 'inline-block' },
-                className: className
-            });
+        var iconPaths = {
+            'layers': 'M12 2L2 7l10 5 10-5-10-5|M2 17l10 5 10-5|M2 12l10 5 10-5',
+            'activity': 'M22 12h-4l-3 9L9 3l-3 9H2',
+            'settings-2': 'M20 7h-9|M3 7h2|M14 17H5|M21 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0|M7 7a2 2 0 1 1-4 0 2 2 0 0 1 4 0',
+            'gauge': 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6|M4.22 10.22a8 8 0 0 1 11.31-3.6M1.05 11a11 11 0 0 1 19.4-4.88',
+            'zap': 'M13 2L3 14h9l-1 8 10-12h-9l1-8z',
+            'maximize': 'M8 3H5a2 2 0 0 0-2 2v3|M21 8V5a2 2 0 0 0-2-2h-3|M3 16v3a2 2 0 0 0 2 2h3|M16 21h3a2 2 0 0 0 2-2v-3',
+            'cpu': 'M9 3H5a2 2 0 0 0-2 2v4|M15 3h4a2 2 0 0 1 2 2v4|M9 21H5a2 2 0 0 1-2-2v-4|M15 21h4a2 2 0 0 0 2-2v-4|M9 9h6v6H9z',
+            'clipboard': 'M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2 2H2|M9 2h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z',
+            'check-circle-2': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z|M7 12l3 3 7-7',
+            'save': 'M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z|M17 21v-8H7v8|M7 3v5h8',
+            'rotate-ccw': 'M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8|M3 3v5h5',
+            'trash': 'M3 6h18|M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6|M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2',
+            'book-open': 'M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z|M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z',
+            'external-link': 'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6|M15 3h6v6|M10 14L21 3',
+            'thermometer': 'M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z',
+            'sparkles': 'M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z',
+            'wind': 'M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2|M9.6 4.6A2 2 0 1 1 11 8H2',
+            'droplets': 'M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z',
+            'info': 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z|M12 8h.01|M11 12h1v4h1',
+            'alert-triangle': 'M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z|M12 9v4|M12 17h.01',
+            'chevron-up': 'M18 15l-6-6-6 6',
+            'chevron-down': 'M6 9l6 6 6-6'
         };
 
-        const TechInfo = ({ term, info }) => {
-            const [show, setShow] = useState(false);
-            return h('span', {
-                className: "relative inline-block group cursor-help border-b border-dashed border-[#8b5cf6] text-white font-bold px-1 rounded-sm hover:bg-[#8b5cf6]/10 transition-colors",
-                onMouseEnter: () => setShow(true),
-                onMouseLeave: () => setShow(false),
-                onClick: () => setShow(!show)
-            }, term, show && h('span', {
-                className: "absolute bottom-full mb-3 left-1/2 -translate-x-1/2 tech-tooltip p-4 bg-slate-900 border border-slate-700 rounded-2xl leading-relaxed text-slate-200 z-[100]"
-            },
-                h('span', { className: "flex items-center gap-2 font-black text-[#8b5cf6] uppercase mb-2" },
-                    h(Icon, { name: "info", size: 14, className: "text-[#8b5cf6]" }), term
-                ),
-                info,
-                h('span', { className: "absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-700" })
-            ));
-        };
+        function Icon(p) {
+            var paths = (iconPaths[p.name] || iconPaths.info).split('|');
+            return h('svg', { xmlns: 'http://www.w3.org/2000/svg', width: p.size || 20, height: p.size || 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: '2', strokeLinecap: 'round', strokeLinejoin: 'round', style: Object.assign({ display: 'inline-block', verticalAlign: 'middle' }, p.style) }, paths.map(function(d, i) { return h('path', { key: i, d: d }); }));
+        }
 
-        const App = () => {
-            const [activeTab, setActiveTab] = useState('calculators');
-            const [activeCalc, setActiveCalc] = useState('flow');
-            const [copied, setCopied] = useState(false);
-            const [saved, setSaved] = useState(false);
-            const [expandedStep, setExpandedStep] = useState(-1);
-            const [material, setMaterial] = useState('PLA');
-            const [symptom, setSymptom] = useState(null);
-            const [history, setHistory] = useState([]);
+        function TechInfo(p) {
+            var s = useState(false); var show = s[0], setShow = s[1];
+            return h('span', { style: { position: 'relative', display: 'inline-block', cursor: 'help', borderBottom: '1px dashed ' + PURPLE, color: 'white', fontWeight: 'bold', padding: '0 3px' }, onMouseEnter: function() { setShow(true); }, onMouseLeave: function() { setShow(false); }, onClick: function() { setShow(!show); } }, p.term, show && h('span', { className: 'tooltip-box' }, h('span', { style: { display: 'block', color: PURPLE, fontWeight: '900', fontSize: '11px', marginBottom: '6px' } }, p.term), p.info));
+        }
 
-            const [flowData, setFlowData] = useState({ current: 0.98, modifier: 5 });
-            const [paData, setPaData] = useState({ start: 0, step: 0.02, height: 10 });
-            const [volData, setVolData] = useState({ start: 5, step: 0.5, height: 20 });
-            const [vfaData, setVfaData] = useState({ start: 100, step: 20, level: 3 });
-            const [shrinkData, setShrinkData] = useState({ target: 100, measured: 99.2 });
+        function InputGroup(p) {
+            return h('div', { style: { marginBottom: '18px' } }, h('label', { style: { display: 'block', fontSize: '11px', fontWeight: '900', textTransform: 'uppercase', color: '#64748b', marginBottom: '8px', fontFamily: 'monospace' } }, p.label), h('input', { type: 'text', inputMode: 'decimal', value: p.value, onChange: function(e) { var v = e.target.value; if (v === '' || v === '-' || !isNaN(Number(v))) p.onChange(v); }, autoComplete: 'off', className: "w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 transition-all font-mono shadow-inner" }), p.help && h('p', { style: { fontSize: '11px', color: '#475569', marginTop: '5px', fontStyle: 'italic', fontWeight: 'bold', textTransform: 'uppercase' } }, p.help));
+        }
 
-            useEffect(() => {
-                const materialPresets = {
-                    PLA:   { flow: 0.98, paStep: 0.02, volStart: 5, volStep: 0.5 },
-                    PETG:  { flow: 0.95, paStep: 0.04, volStart: 3, volStep: 0.3 },
-                    ABS:   { flow: 0.94, paStep: 0.04, volStart: 5, volStep: 0.5 },
-                    ASA:   { flow: 0.94, paStep: 0.04, volStart: 5, volStep: 0.5 },
-                    TPU:   { flow: 1.00, paStep: 0.08, volStart: 1, volStep: 0.1 },
-                    Otros: { flow: 1.00, paStep: 0.02, volStart: 5, volStep: 0.5 }
-                };
-                const config = materialPresets[material] || materialPresets.Otros;
-                setFlowData(prev => ({ ...prev, current: config.flow }));
-                setPaData(prev => ({ ...prev, step: config.paStep }));
-                setVolData(prev => ({ ...prev, start: config.volStart, step: config.volStep }));
+        function DocStep(p) {
+            return h('div', { style: { background: 'rgba(15,23,42,0.8)', border: '1px solid #1e293b', borderRadius: '16px', marginBottom: '12px' } }, h('button', { onClick: p.onClick, style: { width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 24px', cursor: 'pointer', background: 'none', border: 'none', color: 'inherit', textAlign: 'left' } }, h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px' } }, h('div', { style: { padding: '11px', background: '#1e293b', borderRadius: '10px', color: PURPLE, display: 'flex' } }, h(Icon, { name: p.iconName, size: 22 })), h('div', null, h('h3', { style: { fontWeight: '800', fontSize: '15px', textTransform: 'uppercase', color: '#f1f5f9', fontStyle: 'italic', margin: 0 } }, p.title), h('p', { style: { fontSize: '11px', color: PURPLE, fontWeight: '900', textTransform: 'uppercase', margin: '4px 0 0' } }, "Guía Técnica"))), h(Icon, { name: p.expanded ? 'chevron-up' : 'chevron-down', size: 20 })), p.expanded && h('div', { style: { padding: '0 24px 24px', borderTop: '1px solid rgba(30,41,59,0.6)', paddingTop: '18px' } }, p.children));
+        }
+
+        function App() {
+            var sTab = useState('calculators'); var activeTab = sTab[0], setActiveTab = sTab[1];
+            var sCalc = useState('flow'); var activeCalc = sCalc[0], setActiveCalc = sCalc[1];
+            var sCopied = useState(false); var copied = sCopied[0], setCopied = sCopied[1];
+            var sSaved = useState(false); var saved = sSaved[0], setSaved = sSaved[1];
+            var sExp = useState(-1); var expandedStep = sExp[0], setExpandedStep = sExp[1];
+            var sMat = useState('PLA'); var material = sMat[0], setMaterial = sMat[1];
+            var sSymp = useState(null); var symptom = sSymp[0], setSymptom = sSymp[1];
+            var sHist = useState([]); var history = sHist[0], setHistory = sHist[1];
+
+            var sf = useState({ current: 0.98, modifier: 5 }); var flowData = sf[0], setFlowData = sf[1];
+            var sp = useState({ start: 0, step: 0.02, height: 10 }); var paData = sp[0], setPaData = sp[1];
+            var sv = useState({ start: 5, step: 0.5, height: 20 }); var volData = sv[0], setVolData = sv[1];
+            var sg = useState({ start: 100, step: 20, level: 3 }); var vfaData = sg[0], setVfaData = sg[1];
+            var sk = useState({ target: 100, measured: 99.2 }); var shrinkData = sk[0], setShrinkData = sk[1];
+
+            useEffect(function() {
+                var presets = { PLA: { f: 0.98, pa: 0.02, vs: 5, vh: 0.5 }, PETG: { f: 0.95, pa: 0.04, vs: 3, vh: 0.3 }, ABS: { f: 0.94, pa: 0.04, vs: 5, vh: 0.5 }, Otros: { f: 1.00, pa: 0.02, vs: 5, vh: 0.5 } };
+                var c = presets[material] || presets.Otros;
+                setFlowData(function(prev) { return { current: c.f, modifier: prev.modifier }; });
+                setPaData(function(prev) { return { start: prev.start, step: c.pa, height: prev.height }; });
+                setVolData(function(prev) { return { start: c.vs, step: c.vh, height: prev.height }; });
             }, [material]);
 
-            const getCurrentResult = useCallback(() => {
-                const p = (val) => isNaN(parseFloat(val)) ? 0 : parseFloat(val);
-                if (activeCalc === 'flow')   return (p(flowData.current) * (100 + p(flowData.modifier)) / 100).toFixed(4);
-                if (activeCalc === 'pa')     return (p(paData.start) + (p(paData.height) * p(paData.step))).toFixed(4);
-                if (activeCalc === 'vol')    return (p(volData.start) + (p(volData.height) * p(volData.step))).toFixed(2);
-                if (activeCalc === 'vfa')    return (p(vfaData.start) + (p(vfaData.step) * (Math.max(1, parseInt(vfaData.level)) - 1))).toFixed(0);
-                if (activeCalc === 'shrink') return p(shrinkData.measured) === 0 ? "0.00" : ((p(shrinkData.target) / p(shrinkData.measured)) * 100).toFixed(2);
-                return "0.0000";
-            }, [activeCalc, flowData, paData, volData, vfaData, shrinkData]);
+            function getRes() {
+                var p = function(v) { return isNaN(parseFloat(v)) ? 0 : parseFloat(v); };
+                if (activeCalc === 'flow') return (p(flowData.current) * (100 + p(flowData.modifier)) / 100).toFixed(4);
+                if (activeCalc === 'pa') return (p(paData.start) + (p(paData.height) * p(paData.step))).toFixed(4);
+                if (activeCalc === 'vol') return (p(volData.start) + (p(volData.height) * p(volData.step))).toFixed(2);
+                if (activeCalc === 'vfa') return (p(vfaData.start) + (p(vfaData.step) * (Math.max(1, parseInt(vfaData.level)) - 1))).toFixed(0);
+                if (activeCalc === 'shrink') return p(shrinkData.measured) === 0 ? '0.00' : (p(shrinkData.target) / p(shrinkData.measured) * 100).toFixed(2);
+                return '0.0000';
+            }
 
-            const saveToHistory = () => {
-                const res = getCurrentResult();
-                const newItem = {
-                    id: Date.now(),
-                    type: activeCalc.toUpperCase(),
-                    material: material,
-                    value: res + (activeCalc === 'shrink' ? '%' : ''),
-                    date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                };
-                setHistory(prev => [newItem, ...prev].slice(0, 10));
-                setSaved(true);
-                setTimeout(() => setSaved(false), 1500);
-            };
-
-            const copyToClipboard = (text) => {
-                navigator.clipboard.writeText(text).then(() => {
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                });
-            };
-
-            const clearHistory = () => setHistory([]);
-            const deleteItem = (id) => setHistory(prev => prev.filter(i => i.id !== id));
-
-            // FIX: goToHelp estaba referenciado pero nunca definido — aquí está la corrección
-            const goToHelp = (calcId) => {
-                const calcToStep = { flow: 1, pa: 2, vol: 3, vfa: 4, shrink: 6 };
-                const stepIdx = calcToStep[calcId] !== undefined ? calcToStep[calcId] : 0;
+            function goToHelp(calcId) {
+                var map = { flow: 1, pa: 2, vol: 3, vfa: 4, shrink: 6 };
                 setActiveTab('guide');
-                setExpandedStep(stepIdx);
+                setExpandedStep(map[calcId] !== undefined ? map[calcId] : 0);
+            }
+
+            function saveToHistory() {
+                var res = getRes();
+                var item = { id: Date.now(), type: activeCalc.toUpperCase(), material: material, value: res + (activeCalc === 'shrink' ? '%' : ''), date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) };
+                setHistory(function(prev) { return [item].concat(prev).slice(0, 10); });
+                setSaved(true); setTimeout(function() { setSaved(false); }, 1500);
+            }
+
+            function copyRes() {
+                navigator.clipboard.writeText(getRes()).then(function() { setCopied(true); setTimeout(function() { setCopied(false); }, 2000); });
+            }
+
+            var tips = {
+                v6: 'Hotend clásico de E3D. Zona de fusión corta (~12mm). Ideal para precisión pero limitado en caudal.',
+                volcano: 'Hotend de alta capacidad. Zona de fusión ~20mm. Permite duplicar la velocidad de extrusión.',
+                bambu: 'Hotend con calentador cerámico 360 grados optimizado para CoreXY de ultra-velocidad.',
+                order: 'El Scarf Seam requiere paredes internas previas. Usa siempre el orden Interior > Exterior.'
             };
 
-            const tips = {
-                v6: "Hotend clásico de E3D. Zona de fusión corta (~12mm). Ideal para precisión pero limitado en caudal máximo.",
-                volcano: "Hotend de alta capacidad. Bloque vertical con zona de fusión de ~20mm. Permite duplicar la velocidad de extrusión.",
-                bambu: "Hotend con calentador cerámico 360° y zona de fundido optimizada para CoreXY de ultra-velocidad.",
-                order: "El Scarf Seam requiere una base de paredes internas previa. Use siempre el orden Interior-Exterior."
-            };
-
-            const t = {
-                es: {
-                    subtitle: "Herramientas para makers",
-                    navCalcs: "Calculadoras", navGuide: "Ayuda",
-                    sidebarFlow: "Flujo", sidebarPA: "Presión (PA)", sidebarVol: "Caudal", sidebarVFA: "VFA", sidebarShrink: "Escala",
-                    inputTitle: "Entrada de Datos", resTitle: "Valor Sugerido",
-                    copyBtn: "Copiar", copiedBtn: "¡Copiado!",
-                    guideLink: "Ver manual técnico completo", guideBadge: "Guía Técnica", matLabel: "Filamento:",
-                    recentResults: "Guardados / Historial", clearAll: "Borrar Todo", noHistory: "Sin datos guardados",
-                    wikiTitle: "Manual de Calibración",
-                    wikiSub: "Documentación técnica oficial de OrcaSlicer condensada para configuración profesional.",
-                    wikiBtn: "Wiki GitHub",
-                    moistureTitle: "Diagnosticador de Humedad",
-                    stepTitles: [
-                        "1. Torre de Temperatura (Temp Tower)",
-                        "2. Relación de Flujo (Flow Ratio)",
-                        "3. Avance de Presión (Pressure Advance)",
-                        "4. Límite de Velocidad Volumétrica",
-                        "5. Test de Vibraciones (VFA)",
-                        "6. Costuras Invisibles (Scarf Seams)",
-                        "7. Encogimiento y Escala (Física Térmica)",
-                        "8. Diagnóstico de Humedad y Secado"
-                    ]
-                }
-            };
-
-            const dryingData = [
-                { mat: 'PLA',      temp: '45-50°C', time: '4-6h' },
-                { mat: 'PETG',     temp: '60-65°C', time: '6-8h' },
-                { mat: 'ABS/ASA',  temp: '70-80°C', time: '6h+'  },
-                { mat: 'Nylon/TPU',temp: '75-85°C', time: '12h+' }
+            var guideItems = [
+                { title: "1. Torre de Temperatura", icon: 'thermometer', content: h('div', null, h('p', { style: { marginBottom: '12px', fontWeight: '600' } }, 'Conocé el límite térmico del polímero antes de tocar flujos o velocidades.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px', fontSize: '14px' } }, '• PLA: 190-230C | PETG: 235-260C | ABS/ASA: 245-275C.', h('br'), '• Iniciá en el máximo y bajá cada 5C. La ideal mantiene adhesión irrompible.')) },
+                { title: "2. Relación de Flujo (Flow Ratio)", icon: 'activity', content: h('div', null, h('p', { style: { marginBottom: '12px' } }, 'Ajusta el volumen real de plástico respecto al comando del Slicer.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, '• Pass 1: Imprimí bloques de -20 a +10. Buscá superficie 100% cerrada.', h('br'), '• Pass 2: Ajuste fino de -9 a +1 para superficies perfectas.')) },
+                { title: "3. Avance de Presión (PA)", icon: 'settings-2', content: h('div', null, h('p', { style: { marginBottom: '12px' } }, 'Compensa la elasticidad para esquinas perfectas.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, '• Direct Drive: 0.012 - 0.045 | Bowden: 0.12 - 0.55.', h('br'), '• Elimina esquinas abultadas y evita hilos al final de perímetros.')) },
+                { title: "4. Límite de Velocidad Volumétrica", icon: 'gauge', content: h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, h('p', null, h(TechInfo, { term: 'Hotend V6', info: tips.v6 }), ': 12-15 mm3/s'), h('p', null, h(TechInfo, { term: 'Volcano', info: tips.volcano }), ': 24-32 mm3/s'), h('p', null, h(TechInfo, { term: 'Bambu Lab', info: tips.bambu }), ': 28-36 mm3/s')) },
+                { title: "5. Vibraciones (VFA)", icon: 'zap', content: h('div', null, h('p', null, 'Vertical Fine Artifacts: marcas visuales por resonancia.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, 'Identificá la velocidad donde la pared parece un espejo liso y usala en perímetros.')) },
+                { title: "6. Costuras (Scarf Seams)", icon: 'sparkles', content: h('div', null, h('p', null, 'Tecnología para borrar la cicatriz Z mediante rampas.'), h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, 'Scarf Flow: 100% ideal. Requiere orden: ', h(TechInfo, { term: 'Interior-Exterior', info: tips.order }))) },
+                { title: "7. Encogimiento y Escala", icon: 'maximize', content: h('div', { style: { padding: '16px', background: 'rgba(15,23,42,0.5)', borderRadius: '10px' } }, h('p', null, 'Compensación por contracción térmica fría.'), h('p', null, 'PLA/PETG: 0.2% | ABS/ASA: 0.8% | Nylon/PC: 1.5%.')) },
+                { title: "8. Humedad y Secado", icon: 'wind', content: h('div', null, h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' } }, h('button', { onClick: function() { setSymptom('s'); }, style: { padding: '10px', borderRadius: '8px', background: symptom === 's' ? PURPLE : '#1e293b', color: 'white' } }, 'Velo'), h('button', { onClick: function() { setSymptom('p'); }, style: { padding: '10px', borderRadius: '8px', background: symptom === 'p' ? PURPLE : '#1e293b', color: 'white' } }, 'Popping')), symptom && h('p', { style: { fontStyle: 'italic', fontSize: '13px' } }, symptom === 's' ? 'Puede ser PA o humedad leve.' : 'HUMEDAD CRÍTICA. Secado obligatorio inmediato.')) }
             ];
 
-            const guideItems = [
-                {
-                    title: t.es.stepTitles[0], icon: "thermometer",
-                    content: h('div', { className: "space-y-4 text-left" },
-                        h('p', { className: "text-slate-300 text-base md:text-lg leading-relaxed font-semibold" },
-                            "Este es el cimiento de cualquier calibración exitosa. Antes de tocar flujos o velocidades, debemos conocer el límite térmico del polímero específico."),
-                        h('div', { className: "p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed" },
-                            "• Rangos técnicos típicos: PLA (190-230°C), PETG (235-260°C), ABS/ASA (245-275°C), TPU (215-240°C).", h('br'),
-                            "• Metodología profesional: Inicie la torre en el valor máximo recomendado por el fabricante y decrezca cada 5°C.", h('br'),
-                            "• Criterios de éxito: La temperatura ideal es la más baja posible que mantenga una adhesión de capas irrompible manualmente."))
-                },
-                {
-                    title: t.es.stepTitles[1], icon: "activity",
-                    content: h('div', { className: "space-y-4 text-left" },
-                        h('p', { className: "text-slate-300 text-base md:text-lg leading-relaxed font-semibold" },
-                            "El Ratio de Flujo ajusta el volumen real de plástico respecto al comando del Slicer."),
-                        h('div', { className: "p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed" },
-                            "• Pass 1 (Grueso): Imprima bloques de -20 a +10. Busque el que tenga la superficie 100% cerrada.", h('br'),
-                            "• Nota de inspección: Use luz lateral rasante. Si ve huecos, falta flujo. Si ve crestas, sobra flujo."))
-                },
-                {
-                    title: t.es.stepTitles[2], icon: "settings-2",
-                    content: h('div', { className: "space-y-4 text-left" },
-                        h('p', { className: "text-slate-300 text-base md:text-lg leading-relaxed font-semibold" },
-                            "El Pressure Advance (PA) compensa la elasticidad del filamento. Es vital para la nitidez en esquinas."),
-                        h('div', { className: "p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed" },
-                            "• Qué soluciona: Elimina esquinas abultadas, evita hilos al final de perímetros.", h('br'),
-                            "• Valores guía: Direct Drive (0.012 - 0.045), Bowden (0.12 - 0.55)."))
-                },
-                {
-                    title: t.es.stepTitles[3], icon: "gauge",
-                    content: h('div', { className: "space-y-4 text-left" },
-                        h('p', { className: "text-slate-300 text-base md:text-lg leading-relaxed font-semibold" },
-                            "Determina el límite físico real de su Hotend (mm³/s)."),
-                        h('div', { className: "p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 space-y-4 shadow-inner" },
-                            h('div', { className: "flex flex-col border-l-2 border-[#8b5cf6]/30 pl-3" },
-                                h(TechInfo, { term: "Hotend V6", info: tips.v6 }),
-                                h('span', { className: "text-white font-mono text-base mt-1" }, "12 - 15 mm³/s")),
-                            h('div', { className: "flex flex-col border-l-2 border-[#8b5cf6]/30 pl-3" },
-                                h(TechInfo, { term: "Hotend Volcano", info: tips.volcano }),
-                                h('span', { className: "text-white font-mono text-base mt-1" }, "24 - 32 mm³/s")),
-                            h('div', { className: "flex flex-col border-l-2 border-[#8b5cf6]/30 pl-3" },
-                                h(TechInfo, { term: "Bambu Lab HF", info: tips.bambu }),
-                                h('span', { className: "text-white font-mono text-base mt-1" }, "28 - 36 mm³/s"))))
-                },
-                {
-                    title: t.es.stepTitles[4], icon: "zap",
-                    content: h('div', { className: "space-y-4 text-left" },
-                        h('p', { className: "text-slate-300 text-base md:text-lg leading-relaxed font-semibold" },
-                            "Las Vertical Fine Artifacts (VFA) son marcas visuales causadas por la resonancia."),
-                        h('div', { className: "p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed" },
-                            "• Metodología: Imprima una pared aumentando la velocidad 20mm/s cada 10mm de altura.", h('br'),
-                            "• Acción: Identifique el escalón donde la pared se ve como un espejo liso y use esa velocidad."))
-                },
-                {
-                    title: t.es.stepTitles[5], icon: "sparkles",
-                    content: h('div', { className: "space-y-4 text-sm md:text-base text-slate-400 leading-relaxed text-left" },
-                        h('p', { className: "text-slate-300 text-base md:text-lg font-bold uppercase tracking-tighter" },
-                            "Tecnología revolucionaria para borrar la cicatriz de la costura mediante rampas."),
-                        h('div', { className: "p-5 bg-slate-800/30 rounded-2xl border border-slate-800 space-y-4 shadow-inner" },
-                            h('p', null, "• Scarf Flow: 100% ideal. Si hay hueco, suba a 105%."),
-                            h('p', null, "• Orden de Paredes: ", h(TechInfo, { term: "Crucial", info: tips.order }), " Requiere paredes internas previas.")))
-                },
-                {
-                    title: t.es.stepTitles[6], icon: "maximize",
-                    content: h('div', { className: "space-y-6 text-left" },
-                        h('div', { className: "flex gap-4 items-start bg-slate-900/50 p-5 rounded-xl border border-slate-800 shadow-inner text-base" },
-                            h(Icon, { name: "alert-triangle", className: "text-amber-500 shrink-0 mt-1", size: 24 }),
-                            h('div', null,
-                                h('p', { className: "text-slate-100 text-lg font-bold uppercase mb-2 italic" }, "Física de Polímeros vs Configuración"),
-                                h('p', { className: "text-slate-300 leading-relaxed font-medium" },
-                                    "Si su cubo de 100mm mide 99.2mm tras enfriarse, es contracción térmica, no subextrusión."))),
-                        h('div', { className: "p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed space-y-4" },
-                            h('ul', { className: "space-y-3" },
-                                h('li', null, "• PLA / PETG: 0.1% - 0.2%."),
-                                h('li', null, "• ABS / ASA: 0.6% - 0.9%."),
-                                h('li', null, "• Nylon / PC: 1.0% - 1.6%."))))
-                },
-                {
-                    title: t.es.stepTitles[7], icon: "wind",
-                    content: h('div', { className: "space-y-6 text-left" },
-                        h('div', { className: "bg-slate-950/50 p-6 rounded-xl border border-slate-800 shadow-xl" },
-                            h('h4', { className: "font-bold text-[#8b5cf6] mb-5 uppercase tracking-tighter flex items-center gap-2 text-base md:text-lg italic" },
-                                h(Icon, { name: "droplets", size: 20 }), t.es.moistureTitle),
-                            h('div', { className: "grid grid-cols-1 sm:grid-cols-2 gap-4" },
-                                h('button', {
-                                    onClick: () => setSymptom('stringing'),
-                                    className: `p-5 rounded-xl border text-left transition-all ${symptom === 'stringing' ? 'bg-[#8b5cf6] border-[#8b5cf6] text-white font-bold' : 'bg-slate-900 border-slate-800'}`
-                                }, h('span', { className: "text-sm block uppercase font-bold" }, "Velo / Stringing")),
-                                h('button', {
-                                    onClick: () => setSymptom('popping'),
-                                    className: `p-5 rounded-xl border text-left transition-all ${symptom === 'popping' ? 'bg-[#8b5cf6] border-[#8b5cf6] text-white font-bold' : 'bg-slate-900 border-slate-800'}`
-                                }, h('span', { className: "text-sm block uppercase font-bold" }, "Popping / Burbujas"))),
-                            symptom && h('div', { className: "mt-5 p-5 bg-[#8b5cf6]/10 rounded-lg border border-[#8b5cf6]/30 text-sm md:text-base leading-relaxed italic text-slate-100" },
-                                symptom === 'stringing'
-                                    ? "Diagnóstico: Puede ser retracción o humedad leve. Calibre su Pressure Advance."
-                                    : "Diagnóstico: HUMEDAD CRÍTICA. El filamento requiere secado inmediato.")),
-                        h('div', { className: "overflow-hidden rounded-xl border border-slate-800 shadow-xl bg-slate-900/40" },
-                            h('table', { className: "w-full text-left text-sm" },
-                                h('thead', { className: "bg-slate-800 text-slate-300 font-bold uppercase text-xs" },
-                                    h('tr', null,
-                                        h('th', { className: "p-4" }, "Material"),
-                                        h('th', { className: "p-4" }, "Temp"),
-                                        h('th', { className: "p-4" }, "Tiempo"))),
-                                h('tbody', { className: "divide-y divide-slate-800/50" },
-                                    dryingData.map((item, idx) =>
-                                        h('tr', { key: idx, className: "hover:bg-[#8b5cf6]/5" },
-                                            h('td', { className: "p-4 font-bold text-[#8b5cf6]" }, item.mat),
-                                            h('td', { className: "p-4 font-mono" }, item.temp),
-                                            h('td', { className: "p-4 font-mono" }, item.time)))))))
-                }
-            ];
+            return h('div', { style: { minHeight: '100vh', background: '#0a0f18', color: '#f1f5f9' } },
+                h('div', { style: { maxWidth: '960px', margin: '0 auto', padding: '24px 16px' } },
+                    h('header', { style: { display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px', borderBottom: '1px solid #1e293b', paddingBottom: '24px', marginBottom: '32px' } },
+                        h('div', { style: { display: 'flex', alignItems: 'center', gap: '14px' } },
+                            h('div', { style: { width: '50px', height: '50px', background: PURPLE, borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' } }, h(Icon, { name: 'layers', size: 26 })),
+                            h('div', null, h('h1', { style: { fontSize: '30px', fontWeight: '900', fontStyle: 'italic', margin: 0 } }, 'Sky Toolbox'), h('p', { style: { color: '#64748b', fontSize: '11px', fontWeight: '700' } }, 'HERRAMIENTAS PARA MAKERS'))),
+                        h('nav', { style: { display: 'flex', background: 'rgba(15,23,42,0.8)', padding: '5px', borderRadius: '12px', border: '1px solid #1e293b' } },
+                            h('button', { className: 'btn-nav ' + (activeTab === 'calculators' ? 'active' : 'inactive'), onClick: function() { setActiveTab('calculators'); } }, 'Calculadoras'),
+                            h('button', { className: 'btn-nav ' + (activeTab === 'guide' ? 'active' : 'inactive'), onClick: function() { setActiveTab('guide'); } }, 'Ayuda'))),
+                    activeTab === 'calculators' ? h('div', { style: { display: 'grid', gridTemplateColumns: 'minmax(180px, 220px) 1fr', gap: '20px' } },
+                        h('div', null,
+                            h('div', { style: { background: 'rgba(15,23,42,0.5)', padding: '14px', borderRadius: '12px', border: '1px solid #1e293b', marginBottom: '12px' } },
+                                h('label', { style: { display: 'block', fontSize: '10px', fontWeight: '900', color: '#64748b', fontStyle: 'italic' } }, 'Filamento:'),
+                                h('select', { value: material, onChange: function(e) { setMaterial(e.target.value); }, style: { width: '100%', background: '#020617', border: '1px solid #1e293b', borderRadius: '8px', padding: '9px 12px', color: 'white', cursor: 'pointer' } },
+                                    materialsList.map(function(m) { return h('option', { key: m, value: m }, m); }))),
+                            h('div', { style: { display: 'flex', flexDirection: 'column', gap: '6px' } },
+                                [ {id:'flow',l:'Flujo',i:'activity'}, {id:'pa',l:'Presion (PA)',i:'settings-2'}, {id:'vol',l:'Caudal',i:'gauge'}, {id:'vfa',l:'VFA',i:'zap'}, {id:'shrink',l:'Escala',i:'maximize'} ].map(function(c) {
+                                    return h('button', { key: c.id, className: 'sb-btn ' + (activeCalc === c.id ? 'active' : 'inactive'), onClick: function() { setActiveCalc(c.id); } }, h(Icon, { name: c.i, size: 17 }), c.l);
+                                }))),
+                        h('div', null,
+                            h('div', { style: { background: 'rgba(15,23,42,0.5)', border: '1px solid #1e293b', borderRadius: '18px', padding: '24px' } },
+                                h('div', { style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' } },
+                                    h('div', null,
+                                        h('h3', { style: { display: 'flex', alignItems: 'center', gap: '8px', fontSize: '16px', fontWeight: '800', fontStyle: 'italic', marginBottom: '20px' } }, h(Icon, { name: 'cpu', style: { color: PURPLE } }), 'Datos'),
+                                        activeCalc === 'flow' && h(React.Fragment, null, h(InputGroup, { label: 'Flujo Actual', value: flowData.current, onChange: function(v) { setFlowData({ current: v, modifier: flowData.modifier }); } }), h(InputGroup, { label: 'Modificador', value: flowData.modifier, onChange: function(v) { setFlowData({ current: flowData.current, modifier: v }); } })),
+                                        activeCalc === 'pa' && h(React.Fragment, null, h(InputGroup, { label: 'Valor Inicial', value: paData.start, onChange: function(v) { setPaData({ start: v, step: paData.step, height: paData.height }); } }), h(InputGroup, { label: 'Paso', value: paData.step, onChange: function(v) { setPaData({ start: paData.start, step: v, height: paData.height }); } }), h(InputGroup, { label: 'Altura', value: paData.height, onChange: function(v) { setPaData({ start: paData.start, step: paData.step, height: v }); } })),
+                                        activeCalc === 'vol' && h(React.Fragment, null, h(InputGroup, { label: 'Inicio', value: volData.start, onChange: function(v) { setVolData({ start: v, step: volData.step, height: volData.height }); } }), h(InputGroup, { label: 'Paso', value: volData.step, onChange: function(v) { setVolData({ start: volData.start, step: v, height: volData.height }); } }), h(InputGroup, { label: 'Fallo', value: volData.height, onChange: function(v) { setVolData({ start: volData.start, step: volData.step, height: v }); } })),
+                                        activeCalc === 'vfa' && h(React.Fragment, null, h(InputGroup, { label: 'Velocidad', value: vfaData.start, onChange: function(v) { setVfaData({ start: v, step: vfaData.step, level: vfaData.level }); } }), h(InputGroup, { label: 'Incremento', value: vfaData.step, onChange: function(v) { setVfaData({ start: vfaData.start, step: v, level: vfaData.level }); } }), h(InputGroup, { label: 'Nivel', value: vfaData.level, onChange: function(v) { setVfaData({ start: vfaData.start, step: vfaData.step, level: v }); } })),
+                                        activeCalc === 'shrink' && h(React.Fragment, null, h(InputGroup, { label: 'Slicer', value: shrinkData.target, onChange: function(v) { setShrinkData({ target: v, measured: shrinkData.measured }); } }), h(InputGroup, { label: 'Real', value: shrinkData.measured, onChange: function(v) { setShrinkData({ target: shrinkData.target, measured: v }); } }))),
+                                    h('div', { style: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' } },
+                                        h('p', { style: { color: PURPLE, fontSize: '11px', fontWeight: '900' } }, 'Sugerido'),
+                                        h('button', { onClick: function() { goToHelp(activeCalc); }, style: { fontSize: '11px', color: '#475569', background: 'none', border: 'none', cursor: 'pointer', marginBottom: '16px' } }, 'Ver manual'),
+                                        h('div', { style: { fontSize: '64px', fontWeight: '900', color: 'white' } }, getRes(), activeCalc === 'shrink' && '%'),
+                                        h('div', { style: { display: 'flex', gap: '8px', marginTop: '20px' } },
+                                            h('button', { onClick: copyRes, style: { padding: '12px 24px', borderRadius: '10px', border: 'none', background: copied ? '#16a34a' : PURPLE, color: 'white', fontWeight: '700', cursor: 'pointer' } }, copied ? 'Listo!' : 'Copiar'),
+                                            h('button', { onClick: saveToHistory, style: { padding: '12px 16px', borderRadius: '10px', border: '1px solid #334155', background: saved ? '#16a34a' : '#1e293b', color: 'white', cursor: 'pointer' } }, h(Icon, { name: saved ? 'check-circle-2' : 'save', size: 18 }))))))))
+                    : h('div', null, guideItems.map(function(s, i) { return h(DocStep, { key: i, title: s.title, iconName: s.icon, badge: 'Guia Tecnica', expanded: expandedStep === i, onClick: function() { setExpandedStep(expandedStep === i ? -1 : i); } }, s.content); }))));
+        }
 
-            const InputGroup = ({ label, value, onChange, help }) =>
-                h('div', { className: "space-y-2 group text-left" },
-                    h('div', { className: "flex justify-between items-center px-1" },
-                        h('label', { className: "text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono" }, label)),
-                    h('input', {
-                        type: "text", inputMode: "decimal", value: value,
-                        onChange: (e) => { const v = e.target.value; if (/^-?\d*\.?\d*$/.test(v) || v === "") onChange(v); },
-                        autoComplete: "off",
-                        className: "w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner"
-                    }),
-                    help && h('p', { className: "text-xs text-slate-700 px-1 italic font-bold uppercase tracking-tighter" }, help));
-
-            const DocStep = ({ title, iconName, badge, expanded, onClick, children }) =>
-                h('div', { className: "bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group" },
-                    h('button', { onClick: onClick, className: "w-full flex items-center justify-between p-7 text-left group" },
-                        h('div', { className: "flex items-center gap-5" },
-                            h('div', { className: "p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors" },
-                                h(Icon, { name: iconName, className: "text-[#8b5cf6]", size: 24 })),
-                            h('div', null,
-                                h('h3', { className: "font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors" }, title),
-                                h('p', { className: "text-xs text-[#8b5cf6] uppercase font-black tracking-widest" }, badge))),
-                        h('div', { className: "shrink-0 ml-3" },
-                            h(Icon, { name: expanded ? "chevron-up" : "chevron-down", className: "text-slate-500", size: 24 }))),
-                    expanded && h('div', { className: "p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 overflow-visible shadow-inner text-left" }, children));
-
-            return h('div', { className: "min-h-screen bg-[#0a0f18] text-slate-100 font-sans" },
-                h('div', { className: "max-w-5xl mx-auto p-4 md:p-8" },
-                    h('header', { className: "flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4 border-b border-slate-800 pb-8 text-left" },
-                        h('div', { className: "flex items-center gap-5" },
-                            h('div', { className: "w-14 h-14 bg-[#8b5cf6] rounded-2xl flex items-center justify-center shadow-lg shadow-[#8b5cf6]/30 text-white transform rotate-3 hover:rotate-0 transition-transform" },
-                                h(Icon, { name: "layers", size: 32 })),
-                            h('div', null,
-                                h('h1', { className: "text-4xl font-black tracking-tighter bg-gradient-to-r from-[#8b5cf6] to-violet-300 bg-clip-text text-transparent uppercase italic" }, "Sky Toolbox"),
-                                h('p', { className: "text-slate-500 text-xs md:text-sm font-bold uppercase tracking-widest" }, t.es.subtitle))),
-                        h('nav', { className: "flex bg-slate-900/80 p-1.5 rounded-xl border border-slate-800 shadow-inner" },
-                            h('button', {
-                                onClick: () => setActiveTab('calculators'),
-                                className: `flex-1 px-5 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'calculators' ? 'bg-[#8b5cf6] text-white shadow-md' : 'text-slate-400 hover:text-white'}`
-                            }, t.es.navCalcs),
-                            h('button', {
-                                onClick: () => setActiveTab('guide'),
-                                className: `flex-1 px-5 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === 'guide' ? 'bg-[#8b5cf6] text-white shadow-md' : 'text-slate-400 hover:text-white'}`
-                            }, t.es.navGuide))),
-
-                    activeTab === 'calculators'
-                        ? h('div', { className: "grid grid-cols-1 lg:grid-cols-12 gap-8" },
-                            h('div', { className: "lg:col-span-3 space-y-5" },
-                                h('div', { className: "bg-slate-900/50 p-5 rounded-2xl border border-slate-800 shadow-inner text-left" },
-                                    h('label', { className: "text-xs font-black uppercase text-slate-500 tracking-widest mb-3 block italic" }, t.es.matLabel),
-                                    h('select', {
-                                        value: material,
-                                        onChange: (e) => setMaterial(e.target.value),
-                                        className: "w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6] transition-all cursor-pointer"
-                                    }, materialsList.map(m => h('option', { key: m, value: m }, m)))),
-                                h('div', { className: "flex lg:flex-col gap-3 overflow-x-auto no-scrollbar pb-3 lg:pb-0" },
-                                    [
-                                        { id: 'flow',   label: t.es.sidebarFlow,   icon: "activity"   },
-                                        { id: 'pa',     label: t.es.sidebarPA,     icon: "settings-2" },
-                                        { id: 'vol',    label: t.es.sidebarVol,    icon: "gauge"      },
-                                        { id: 'vfa',    label: t.es.sidebarVFA,    icon: "zap"        },
-                                        { id: 'shrink', label: t.es.sidebarShrink, icon: "maximize"   }
-                                    ].map(c =>
-                                        h('button', {
-                                            key: c.id,
-                                            onClick: () => setActiveCalc(c.id),
-                                            className: `flex-shrink-0 flex items-center gap-4 p-4 rounded-xl border transition-all ${activeCalc === c.id ? 'bg-[#8b5cf6]/10 border-[#8b5cf6]/50 text-[#8b5cf6] shadow-inner' : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700'}`
-                                        },
-                                            h(Icon, { name: c.icon, size: 20 }),
-                                            h('span', { className: "font-bold text-sm uppercase tracking-tighter" }, c.label))))),
-                            h('div', { className: "lg:col-span-9 space-y-8" },
-                                h('div', { className: "bg-slate-900/50 border border-slate-800 rounded-3xl p-6 md:p-10 backdrop-blur-md relative shadow-2xl" },
-                                    h('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-10" },
-                                        h('div', { className: "space-y-8 text-left" },
-                                            h('h3', { className: "text-2xl font-bold flex items-center gap-4 uppercase tracking-tighter text-slate-100 italic" },
-                                                h(Icon, { name: "cpu", className: "text-[#8b5cf6]", size: 24 }), t.es.inputTitle),
-                                            h('div', { className: "space-y-6" },
-                                                activeCalc === 'flow' && h(React.Fragment, null,
-                                                    h(InputGroup, { label: "Flujo Actual", value: flowData.current, onChange: (v) => setFlowData({ ...flowData, current: v }), help: "Slicer config" }),
-                                                    h(InputGroup, { label: "Modificador", value: flowData.modifier, onChange: (v) => setFlowData({ ...flowData, modifier: v }), help: "Bloque impreso" })),
-                                                activeCalc === 'pa' && h(React.Fragment, null,
-                                                    h(InputGroup, { label: "Valor Inicial", value: paData.start, onChange: (v) => setPaData({ ...paData, start: v }) }),
-                                                    h(InputGroup, { label: "Paso", value: paData.step, onChange: (v) => setPaData({ ...paData, step: v }) }),
-                                                    h(InputGroup, { label: "Altura", value: paData.height, onChange: (v) => setPaData({ ...paData, height: v }) })),
-                                                activeCalc === 'vol' && h(React.Fragment, null,
-                                                    h(InputGroup, { label: "Inicio (mm³/s)", value: volData.start, onChange: (v) => setVolData({ ...volData, start: v }) }),
-                                                    h(InputGroup, { label: "Paso", value: volData.step, onChange: (v) => setVolData({ ...volData, step: v }) }),
-                                                    h(InputGroup, { label: "Altura Fallo", value: volData.height, onChange: (v) => setVolData({ ...volData, height: v }) })),
-                                                activeCalc === 'vfa' && h(React.Fragment, null,
-                                                    h(InputGroup, { label: "Velocidad Inicial", value: vfaData.start, onChange: (v) => setVfaData({ ...vfaData, start: v }) }),
-                                                    h(InputGroup, { label: "Incremento", value: vfaData.step, onChange: (v) => setVfaData({ ...vfaData, step: v }) }),
-                                                    h(InputGroup, { label: "Nivel", value: vfaData.level, onChange: (v) => setVfaData({ ...vfaData, level: v }) })),
-                                                activeCalc === 'shrink' && h(React.Fragment, null,
-                                                    h(InputGroup, { label: "Medida en Slicer", value: shrinkData.target, onChange: (v) => setShrinkData({ ...shrinkData, target: v }) }),
-                                                    h(InputGroup, { label: "Medida con Calibre", value: shrinkData.measured, onChange: (v) => setShrinkData({ ...shrinkData, measured: v }) })))),
-                                        h('div', { className: "flex flex-col items-center justify-center text-center p-8 bg-[#8b5cf6]/5 rounded-3xl border-2 border-dashed border-[#8b5cf6]/20 min-h-[320px] relative shadow-inner" },
-                                            h('p', { className: "text-[#8b5cf6] text-xs font-black uppercase tracking-widest mb-2 font-mono" }, t.es.resTitle),
-                                            h('button', {
-                                                onClick: () => goToHelp(activeCalc),
-                                                className: "text-xs text-slate-500 hover:text-[#8b5cf6] uppercase font-bold tracking-tighter mb-5 flex items-center gap-2 transition-colors underline decoration-[#8b5cf6]/30 italic"
-                                            },
-                                                h(Icon, { name: "book-open", size: 14 }), t.es.guideLink),
-                                            h('div', { className: "text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-tight transition-all tabular-nums tracking-tighter drop-shadow-xl" },
-                                                getCurrentResult(),
-                                                activeCalc === 'shrink' && '%'),
-                                            h('div', { className: "flex gap-3 w-full max-w-[280px] mt-10" },
-                                                h('button', {
-                                                    onClick: () => copyToClipboard(getCurrentResult()),
-                                                    className: `flex-1 flex items-center justify-center gap-3 px-5 py-4 rounded-2xl font-bold transition-all transform active:scale-95 shadow-xl ${copied ? 'bg-green-500 text-white' : 'bg-[#8b5cf6] hover:bg-violet-400 text-white'}`
-                                                },
-                                                    h(Icon, { name: copied ? "check-circle-2" : "clipboard", size: 22 }),
-                                                    h('span', { className: "text-base" }, copied ? t.es.copiedBtn : t.es.copyBtn)),
-                                                h('button', {
-                                                    onClick: saveToHistory,
-                                                    className: `p-4 rounded-2xl transition-all border shadow-lg group ${saved ? 'bg-green-600 border-green-500 text-white' : 'bg-slate-800 text-slate-300 border-slate-700'}`
-                                                }, h(Icon, { name: saved ? "check-circle-2" : "save", size: 22 })))))),
-                                h('div', { className: "bg-slate-900/40 p-8 rounded-3xl border border-slate-800 shadow-inner" },
-                                    h('div', { className: "flex items-center justify-between mb-5 px-1 text-left" },
-                                        h('h4', { className: "text-sm font-black uppercase text-slate-500 tracking-widest flex items-center gap-2 italic" },
-                                            h(Icon, { name: "rotate-ccw", size: 16 }), t.es.recentResults),
-                                        history.length > 0 && h('button', {
-                                            onClick: clearHistory,
-                                            className: "text-xs font-black uppercase text-red-500/60 hover:text-red-500 flex items-center gap-2"
-                                        }, h(Icon, { name: "trash", size: 14 }), t.es.clearAll)),
-                                    h('div', { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" },
-                                        history.length > 0
-                                            ? history.map(item =>
-                                                h('div', { key: item.id, className: "flex justify-between items-center p-4 bg-slate-950/50 rounded-xl border border-slate-800/50 hover:border-[#8b5cf6]/40 transition-colors group relative text-left" },
-                                                    h('div', { className: "flex flex-col" },
-                                                        h('span', { className: "text-[10px] font-black text-[#8b5cf6] uppercase tracking-tighter" }, item.type),
-                                                        h('span', { className: "text-xs text-slate-500 font-medium" }, item.material, " • ", item.date)),
-                                                    h('div', { className: "flex items-center gap-4" },
-                                                        h('span', { className: "text-white font-mono font-bold text-base tracking-tight" }, item.value),
-                                                        h('button', {
-                                                            onClick: () => deleteItem(item.id),
-                                                            className: "p-2 rounded-lg text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
-                                                        }, h(Icon, { name: "trash", size: 14 })))))
-                                            : h('p', { className: "text-sm text-slate-600 italic py-3 text-center w-full uppercase" }, t.es.noHistory)))))
-
-                        : h('div', { className: "space-y-5 pb-24" },
-                            h('div', { className: "grid grid-cols-1 gap-5 text-left" },
-                                guideItems.map((step, idx) =>
-                                    h(DocStep, {
-                                        key: idx, title: step.title, iconName: step.icon,
-                                        badge: t.es.guideBadge, expanded: expandedStep === idx,
-                                        onClick: () => setExpandedStep(expandedStep === idx ? -1 : idx)
-                                    }, step.content))),
-                            h('div', { className: "bg-gradient-to-r from-violet-900/20 to-slate-900/30 p-10 rounded-3xl border border-[#8b5cf6]/30 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl" },
-                                h('div', { className: "flex items-start gap-5 text-left" },
-                                    h('div', { className: "p-4 bg-slate-800 rounded-2xl shadow-inner text-[#8b5cf6]" },
-                                        h(Icon, { name: "book-open", size: 28 })),
-                                    h('div', { className: "space-y-2 text-left" },
-                                        h('h4', { className: "text-2xl font-bold text-white italic" }, t.es.wikiTitle),
-                                        h('p', { className: "text-base text-slate-400 max-w-md leading-relaxed" }, t.es.wikiSub))),
-                                h('a', {
-                                    href: "https://github.com/OrcaSlicer/OrcaSlicer/wiki/Calibration",
-                                    target: "_blank", rel: "noreferrer",
-                                    className: "flex items-center gap-4 bg-[#8b5cf6] text-white px-10 py-4 rounded-xl font-bold hover:bg-violet-400 transition-all shadow-lg group text-base"
-                                }, t.es.wikiBtn, h(Icon, { name: "external-link", size: 20, className: "group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" })))),
-
-                    h('footer', { className: "mt-14 pt-10 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8 text-slate-500 pb-16" },
-                        h('div', { className: "flex flex-col gap-2 text-left" },
-                            h('div', { className: "flex items-center gap-2 font-mono text-sm text-slate-400 font-bold uppercase tracking-tighter" },
-                                h('span', { className: "w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" }),
-                                " Sky Toolbox @ sky3darg"),
-                            h('p', { className: "text-xs uppercase font-black tracking-widest italic text-slate-600" }, "by skydev")),
-                        h('div', { className: "flex flex-col md:items-end gap-4 text-xs font-medium italic text-right text-slate-600" },
-                            h('div', { className: "flex gap-8 text-xs font-black uppercase tracking-widest not-italic mb-1 text-slate-600" },
-                                h('a', { href: "https://bambulab.com", target: "_blank", rel: "noreferrer", className: "hover:text-[#8b5cf6] transition-colors" }, "Bambu Lab"),
-                                h('a', { href: "https://github.com/SoftFever/OrcaSlicer", target: "_blank", rel: "noreferrer", className: "hover:text-[#8b5cf6] transition-colors" }, "OrcaSlicer")),
-                            "© 2026 Sky 3D"))));
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(h(App));
+        ReactDOM.createRoot(document.getElementById('root')).render(h(App));
+    })();
     </script>
 </body>
 </html>
