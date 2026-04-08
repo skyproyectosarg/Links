@@ -10,546 +10,657 @@
     <meta name="keywords" content="skydev, skytoolbox, calibracion 3d, orcaslicer, impresion 3d, franco jesus pacheco, catamarca">
     <meta name="author" content="Franco Jesús Pacheco">
 
-    <!-- EL ARREGLO ESTÁ AQUÍ: Se añadió 'unsafe-eval' en script-src para permitir que Tailwind compile los estilos -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https://sky3d.com.ar; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https://sky3d.com.ar; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests;">
 
     <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
     <link rel="shortcut icon" href="icons/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-    <meta name="theme-color" content="#0a0f18">
+    <meta name="theme-color" content="#09090b">
 
-    <!-- Tailwind & FontAwesome -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0a0f18; color: #f1f5f9; font-size: 16px; }
+        :root {
+            --bg: #09090b;
+            --card: #18181b;
+            --card-hover: #27272a;
+            --border: #27272a;
+            --border-light: #3f3f46;
+            --text: #f4f4f5;
+            --text-dim: #a1a1aa;
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --accent-dim: rgba(139, 92, 246, 0.1);
+            --danger: #ef4444;
+            --danger-dim: rgba(239, 68, 68, 0.1);
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; padding: 15px; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        .violet-glow { box-shadow: 0 0 40px rgba(139, 92, 246, 0.08); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        select { 
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b5cf6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); 
-            background-position: right 0.75rem center; 
-            background-repeat: no-repeat; 
-            background-size: 1.25em 1.25em; 
-            padding-right: 2.5rem; 
-            appearance: none; 
-        }
-        
-        details > summary { list-style: none; }
-        details > summary::-webkit-details-marker { display: none; }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; background: none; }
+        select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238b5cf6' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 1rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; padding-right: 2.5rem; }
 
-        .tech-tooltip {
-            width: 320px;
-            max-width: 85vw;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: normal;
-            word-wrap: break-word;
-            filter: drop-shadow(0 10px 25px rgba(0,0,0,0.9));
-            font-size: 13px;
-        }
-        @media (max-width: 640px) {
-            .tech-tooltip { width: 260px; }
-        }
+        .container { max-width: 1024px; margin: 0 auto; width: 100%; }
+
+        /* HEADER */
+        .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--text-dim); font-size: 14px; font-weight: 700; margin-bottom: 30px; transition: 0.2s; }
+        .back-link:hover { color: var(--accent); }
+        .header { display: flex; flex-direction: column; gap: 20px; border-bottom: 1px solid var(--border); padding-bottom: 30px; margin-bottom: 30px; }
+        @media (min-width: 768px) { .header { flex-direction: row; justify-content: space-between; align-items: center; } }
+        
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .logo-box { width: 56px; height: 56px; background: var(--accent); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: white; transform: rotate(3deg); box-shadow: 0 10px 20px rgba(139,92,246,0.25); transition: 0.3s; }
+        .logo-box:hover { transform: rotate(0); }
+        .header-title { font-size: 32px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; font-style: italic; background: linear-gradient(to right, #8b5cf6, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; margin-bottom: 4px; }
+        .header-subtitle { font-size: 12px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; }
+
+        /* TABS */
+        .tabs { display: flex; background: var(--card); padding: 6px; border-radius: 12px; border: 1px solid var(--border); width: 100%; }
+        @media (min-width: 768px) { .tabs { width: auto; } }
+        .tab-btn { flex: 1; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 700; color: var(--text-dim); transition: 0.2s; }
+        .tab-btn.active { background: var(--accent); color: white; box-shadow: 0 4px 8px rgba(139,92,246,0.3); }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+
+        /* DASHBOARD GRID */
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
+        @media (min-width: 1024px) { .dashboard-grid { grid-template-columns: 280px 1fr; } }
+        
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 24px; }
+        
+        .input-label { display: block; font-size: 11px; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-family: monospace; font-style: italic; }
+        .input-field { width: 100%; background: var(--bg); border: 1px solid var(--border); color: white; padding: 16px; border-radius: 16px; font-size: 15px; font-weight: 700; outline: none; transition: 0.2s; font-family: monospace; }
+        .input-field:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-dim); }
+        
+        /* MENU LATERAL */
+        .menu-list { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; }
+        .menu-list::-webkit-scrollbar { display: none; }
+        @media (min-width: 1024px) { .menu-list { flex-direction: column; overflow: visible; padding: 0; } }
+        .menu-btn { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; color: var(--text-dim); font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; white-space: nowrap; transition: 0.2s; flex-shrink: 0; }
+        .menu-btn:hover { border-color: var(--border-light); color: white; }
+        .menu-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+        .menu-btn i { font-size: 20px; width: 24px; text-align: center; }
+
+        /* CALCULATOR HERO */
+        .calc-hero { background: var(--card); border: 1px solid var(--border); border-radius: 32px; padding: 32px; display: grid; grid-template-columns: 1fr; gap: 40px; position: relative; overflow: hidden; }
+        @media (min-width: 768px) { .calc-hero { padding: 48px; grid-template-columns: 1fr 1fr; gap: 40px; } }
+        
+        .section-title { font-size: 24px; font-weight: 900; color: white; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; font-style: italic; text-transform: uppercase; letter-spacing: -1px; }
+        .section-title i { color: var(--accent); }
+        
+        .calc-group { display: none; }
+        .calc-group.active { display: block; animation: fadeIn 0.3s ease; }
+        .input-wrapper { margin-bottom: 24px; }
+        .input-hint { font-size: 12px; color: #52525b; font-weight: 800; text-transform: uppercase; margin-top: 8px; font-style: italic; letter-spacing: -0.5px; padding-left: 4px; }
+
+        /* RESULT BOX */
+        .result-section { background: var(--accent-dim); border: 2px dashed rgba(139,92,246,0.2); border-radius: 24px; padding: 40px 32px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; }
+        .result-label { font-size: 12px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px; font-family: monospace; }
+        .link-btn { font-size: 12px; color: var(--text-dim); font-weight: 800; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; display: inline-flex; align-items: center; gap: 8px; transition: 0.2s; font-style: italic; }
+        .link-btn:hover { color: var(--accent); }
+        .result-value { font-size: 56px; font-weight: 900; color: white; margin: 32px 0; letter-spacing: -2px; line-height: 1; text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        @media (min-width: 768px) { .result-value { font-size: 80px; } }
+        
+        .action-buttons { display: flex; gap: 12px; width: 100%; max-width: 280px; }
+        .btn { padding: 18px; border-radius: 16px; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 12px; transition: 0.2s; cursor: pointer; border: none; }
+        .btn-primary { background: var(--accent); color: white; flex: 1; box-shadow: 0 8px 16px rgba(139,92,246,0.25); }
+        .btn-primary:active { transform: scale(0.95); }
+        .btn-secondary { background: var(--card); color: var(--text-dim); border: 1px solid var(--border); width: 64px; }
+        .btn-secondary:hover { background: var(--border); color: white; }
+        .btn-success { background: var(--success) !important; color: white !important; border-color: var(--success) !important; box-shadow: 0 8px 16px rgba(16,185,129,0.25) !important; }
+        
+        .result-note { font-size: 10px; color: var(--text-dim); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-top: 24px; opacity: 0.5; }
+
+        /* HISTORY */
+        .history-card { margin-top: 32px; background: rgba(24,24,27,0.5); border: 1px solid var(--border); border-radius: 24px; padding: 32px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .history-title { font-size: 14px; font-weight: 900; color: var(--text-dim); text-transform: uppercase; display: flex; align-items: center; gap: 12px; font-family: monospace; font-style: italic; letter-spacing: 1px; }
+        .history-title i { color: var(--accent); font-size: 16px; }
+        .btn-clear { font-size: 12px; font-weight: 800; color: rgba(239,68,68,0.6); text-transform: uppercase; display: flex; align-items: center; gap: 8px; transition: 0.2s; display: none; }
+        .btn-clear:hover { color: var(--danger); }
+        
+        .history-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 640px) { .history-grid { grid-template-columns: 1fr 1fr; } }
+        @media (min-width: 1024px) { .history-grid { grid-template-columns: 1fr 1fr 1fr; } }
+        
+        .history-item { background: var(--bg); border: 1px solid rgba(39,39,42,0.5); padding: 16px 20px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; position: relative; }
+        .history-item:hover { border-color: var(--accent-dim); background: var(--card); }
+        .hist-info { display: flex; flex-direction: column; }
+        .hist-type { font-size: 10px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: -0.5px; }
+        .hist-mat { font-size: 12px; color: var(--text-dim); font-weight: 600; margin-top: 2px; }
+        .hist-right { display: flex; align-items: center; gap: 16px; }
+        .hist-val { font-size: 16px; font-weight: 800; color: white; font-family: monospace; }
+        .hist-del { color: #52525b; padding: 8px; border-radius: 8px; transition: 0.2s; font-size: 14px; opacity: 0; }
+        .history-item:hover .hist-del { opacity: 1; }
+        .hist-del:hover { background: var(--danger-dim); color: var(--danger); }
+        .empty-history { text-align: center; color: #52525b; font-size: 14px; font-style: italic; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; padding: 20px; grid-column: 1 / -1; }
+
+        /* GUIDE / WIKI */
+        .guide-container { display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px; }
+        details { background: rgba(24,24,27,0.8); border: 1px solid var(--border); border-radius: 20px; transition: 0.2s; overflow: hidden; }
+        details:hover { border-color: var(--border-light); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        summary { padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; outline: none; }
+        .sum-left { display: flex; align-items: center; gap: 20px; }
+        .sum-icon { width: 56px; height: 56px; background: var(--bg); border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--accent); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); transition: 0.2s; }
+        details:hover .sum-icon { background: var(--accent-dim); }
+        .sum-title { font-size: 18px; font-weight: 800; color: white; text-transform: uppercase; font-style: italic; margin-bottom: 4px; line-height: 1.2; letter-spacing: -0.5px; transition: 0.2s; }
+        details:hover .sum-title { color: var(--accent); }
+        .sum-badge { font-size: 11px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+        .sum-arrow { color: var(--text-dim); font-size: 20px; transition: transform 0.3s; }
+        details[open] .sum-arrow { transform: rotate(180deg); color: var(--text); }
+        .det-content { padding: 0 32px 32px 32px; color: var(--text-dim); font-size: 15px; line-height: 1.6; }
+        .det-content strong { color: white; }
+        .det-box { background: rgba(9,9,11,0.5); padding: 24px; border-radius: 16px; border: 1px solid var(--border); margin-top: 20px; }
+        .det-box-title { font-size: 11px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+
+        .wiki-card { background: linear-gradient(135deg, var(--accent-dim), rgba(24,24,27,0.8)); border: 1px solid rgba(139,92,246,0.3); border-radius: 24px; padding: 40px; display: flex; flex-direction: column; gap: 32px; text-align: left; box-shadow: 0 20px 40px rgba(0,0,0,0.3); position: relative; overflow: hidden; }
+        @media (min-width: 768px) { .wiki-card { flex-direction: row; align-items: center; justify-content: space-between; } }
+        .wiki-info { display: flex; align-items: flex-start; gap: 24px; position: relative; z-index: 2; }
+        .wiki-icon { width: 64px; height: 64px; background: var(--card); border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 32px; color: var(--accent); flex-shrink: 0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+        .wiki-text h4 { font-size: 24px; font-weight: 900; color: white; margin-bottom: 8px; font-style: italic; letter-spacing: -0.5px; }
+        .wiki-text p { font-size: 15px; color: var(--text-dim); line-height: 1.5; max-width: 400px; }
+        .wiki-btn { background: var(--accent); color: white; padding: 18px 40px; border-radius: 16px; font-size: 16px; font-weight: 800; display: inline-flex; align-items: center; gap: 12px; transition: 0.2s; white-space: nowrap; z-index: 2; position: relative; box-shadow: 0 8px 16px rgba(139,92,246,0.25); }
+        .wiki-btn:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 12px 24px rgba(139,92,246,0.4); }
+
+        /* HUMEDAD DIAGNOSTICO */
+        .symptom-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 20px; }
+        @media (min-width: 640px) { .symptom-grid { grid-template-columns: 1fr 1fr; } }
+        .symptom-btn { background: var(--bg); border: 1px solid var(--border); padding: 24px; border-radius: 16px; text-align: left; transition: 0.2s; width: 100%; }
+        .symptom-btn:hover { border-color: var(--border-light); }
+        .symptom-btn.active { background: var(--accent); border-color: var(--accent); color: white; box-shadow: 0 10px 20px rgba(139,92,246,0.25); }
+        .symptom-title { font-size: 15px; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 6px; letter-spacing: -0.5px; }
+        .symptom-desc { font-size: 13px; color: var(--text-dim); font-style: italic; display: block; line-height: 1.4; }
+        .symptom-btn.active .symptom-desc { color: rgba(255,255,255,0.8); }
+        .symptom-result { display: none; background: var(--accent-dim); border: 1px solid rgba(139,92,246,0.3); padding: 24px; border-radius: 16px; margin-top: 16px; font-size: 15px; line-height: 1.6; color: white; }
+        .symptom-result.active { display: block; animation: fadeIn 0.4s ease; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+        th { text-align: left; padding: 16px; font-size: 11px; font-weight: 900; text-transform: uppercase; color: var(--text-dim); border-bottom: 1px solid var(--border); letter-spacing: 1px; }
+        td { padding: 16px; font-size: 14px; font-weight: 600; border-bottom: 1px solid rgba(39,39,42,0.5); color: white; }
+        tr:hover td { background: rgba(139,92,246,0.05); }
+        tr:last-child td { border-bottom: none; }
+        td.mat-name { color: var(--accent); font-weight: 900; }
+        td.mono { font-family: monospace; font-size: 15px; }
+        .note-col { font-style: italic; color: var(--text-dim); font-size: 13px; font-weight: 400; }
+        @media (max-width: 640px) { .note-col, th:last-child { display: none; } }
+
+        /* FOOTER */
+        .footer { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 24px; color: var(--text-dim); }
+        @media (min-width: 768px) { .footer { flex-direction: row; justify-content: space-between; align-items: flex-end; } }
+        .footer-left { display: flex; flex-direction: column; gap: 8px; text-align: center; }
+        @media (min-width: 768px) { .footer-left { text-align: left; } }
+        .footer-brand { display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-family: monospace; text-transform: uppercase; color: var(--text); font-size: 14px; letter-spacing: -0.5px; }
+        @media (min-width: 768px) { .footer-brand { justify-content: flex-start; } }
+        .dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+        .footer-social { display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: var(--accent); font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; margin: 8px 0; }
+        @media (min-width: 768px) { .footer-social { justify-content: flex-start; } }
+        .footer-social:hover { color: var(--accent-hover); }
+        .footer-dev { font-size: 10px; text-transform: uppercase; font-weight: 900; letter-spacing: 2px; font-style: italic; color: #52525b; }
+        
+        .footer-right { display: flex; flex-direction: column; gap: 16px; text-align: center; }
+        @media (min-width: 768px) { .footer-right { text-align: right; } }
+        .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; font-weight: 900; text-transform: uppercase; font-size: 10px; letter-spacing: 1px; }
+        @media (min-width: 768px) { .footer-links { justify-content: flex-end; } }
+        .footer-links a { display: inline-flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-copy { font-size: 12px; font-weight: 600; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); } 70% { box-shadow: 0 0 0 10px rgba(16,185,129,0); } 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); } }
     </style>
 </head>
 <body>
-    <div class="min-h-screen bg-[#0a0f18] text-slate-100 font-sans selection:bg-[#8b5cf6]/30">
-        <div class="max-w-5xl mx-auto p-4 md:p-8">
-            
-            <header class="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4 border-b border-slate-800 pb-8 text-left">
-                <div class="flex items-center gap-5">
-                    <div class="w-14 h-14 bg-[#8b5cf6] rounded-2xl flex items-center justify-center shadow-lg shadow-[#8b5cf6]/30 text-white transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <i class="fas fa-layer-group text-[32px]"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-4xl font-black tracking-tighter bg-gradient-to-r from-[#8b5cf6] to-violet-300 bg-clip-text text-transparent uppercase italic">Sky Toolbox</h1>
-                        <p class="text-slate-500 text-xs md:text-sm font-bold uppercase tracking-widest">Herramientas para makers</p>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4 w-full md:w-auto">
-                    <nav class="flex-1 md:flex-none flex bg-slate-900/80 p-1.5 rounded-xl border border-slate-800 shadow-inner">
-                        <button id="btn-tab-calculators" onclick="switchTab('calculators')" class="flex-1 px-5 py-2 rounded-lg text-sm font-bold transition-all bg-[#8b5cf6] text-white shadow-md">Calculadoras</button>
-                        <button id="btn-tab-guide" onclick="switchTab('guide')" class="flex-1 px-5 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white">Ayuda</button>
-                    </nav>
-                </div>
-            </header>
+    <div class="container">
+        
+        <a href="https://sky3d.com.ar/apps.html" target="_blank" rel="noopener noreferrer" class="back-link">
+            <i class="fas fa-arrow-left"></i> Volver a SkyDev Apps
+        </a>
 
-            <!-- CONTENEDOR CALCULADORAS -->
-            <div id="tab-calculators" class="block animate-in fade-in duration-500">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-box">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div>
+                    <h1 class="header-title">Sky Toolbox</h1>
+                    <p class="header-subtitle">Herramientas para makers</p>
+                </div>
+            </div>
+            <div class="tabs">
+                <button id="btn-tab-calculators" onclick="switchTab('calculators')" class="tab-btn active">Calculadoras</button>
+                <button id="btn-tab-guide" onclick="switchTab('guide')" class="tab-btn">Ayuda</button>
+            </div>
+        </header>
+
+        <!-- CALCULADORAS -->
+        <div id="tab-calculators" class="tab-content active">
+            <div class="dashboard-grid">
+                
+                <div class="sidebar">
+                    <div class="card">
+                        <label class="input-label">Filamento:</label>
+                        <select id="mat-select" onchange="changeMaterial(this.value)" class="input-field">
+                            <option value="PLA">PLA</option>
+                            <option value="PETG">PETG</option>
+                            <option value="ABS">ABS</option>
+                            <option value="ASA">ASA</option>
+                            <option value="TPU">TPU</option>
+                            <option value="PET">PET</option>
+                            <option value="NYLON">NYLON</option>
+                            <option value="PC">PC</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
                     
-                    <div class="lg:col-span-3 space-y-5">
-                        <div class="bg-slate-900/50 p-5 rounded-2xl border border-slate-800 shadow-inner text-left">
-                            <label class="text-xs font-black uppercase text-slate-500 tracking-widest mb-3 block font-mono italic">Filamento:</label>
-                            <select id="mat-select" onchange="changeMaterial(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6] transition-all cursor-pointer">
-                                <option value="PLA">PLA</option>
-                                <option value="PETG">PETG</option>
-                                <option value="ABS">ABS</option>
-                                <option value="ASA">ASA</option>
-                                <option value="TPU">TPU</option>
-                                <option value="PET">PET</option>
-                                <option value="NYLON">NYLON</option>
-                                <option value="PC">PC</option>
-                                <option value="Otros">Otros</option>
-                            </select>
-                        </div>
-                        
-                        <div class="flex lg:flex-col gap-3 overflow-x-auto no-scrollbar pb-3 lg:pb-0">
-                            <button onclick="setCalc('flow')" class="calc-btn flex-shrink-0 flex items-center gap-4 p-4 rounded-xl border transition-all bg-[#8b5cf6]/10 border-[#8b5cf6]/50 text-[#8b5cf6] shadow-inner" data-calc="flow">
-                                <i class="fas fa-chart-line text-[20px]"></i> <span class="font-bold text-sm uppercase tracking-tighter">Flujo</span>
-                            </button>
-                            <button onclick="setCalc('pa')" class="calc-btn flex-shrink-0 flex items-center gap-4 p-4 rounded-xl border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" data-calc="pa">
-                                <i class="fas fa-sliders text-[20px]"></i> <span class="font-bold text-sm uppercase tracking-tighter">Presión (PA)</span>
-                            </button>
-                            <button onclick="setCalc('vol')" class="calc-btn flex-shrink-0 flex items-center gap-4 p-4 rounded-xl border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" data-calc="vol">
-                                <i class="fas fa-gauge-high text-[20px]"></i> <span class="font-bold text-sm uppercase tracking-tighter">Caudal</span>
-                            </button>
-                            <button onclick="setCalc('vfa')" class="calc-btn flex-shrink-0 flex items-center gap-4 p-4 rounded-xl border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" data-calc="vfa">
-                                <i class="fas fa-bolt text-[20px]"></i> <span class="font-bold text-sm uppercase tracking-tighter">VFA</span>
-                            </button>
-                            <button onclick="setCalc('shrink')" class="calc-btn flex-shrink-0 flex items-center gap-4 p-4 rounded-xl border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700" data-calc="shrink">
-                                <i class="fas fa-expand text-[20px]"></i> <span class="font-bold text-sm uppercase tracking-tighter">Escala</span>
-                            </button>
-                        </div>
+                    <div class="menu-list">
+                        <button onclick="setCalc('flow')" class="menu-btn active" data-calc="flow">
+                            <i class="fas fa-chart-line"></i> Flujo
+                        </button>
+                        <button onclick="setCalc('pa')" class="menu-btn" data-calc="pa">
+                            <i class="fas fa-sliders"></i> Presión (PA)
+                        </button>
+                        <button onclick="setCalc('vol')" class="menu-btn" data-calc="vol">
+                            <i class="fas fa-gauge-high"></i> Caudal
+                        </button>
+                        <button onclick="setCalc('vfa')" class="menu-btn" data-calc="vfa">
+                            <i class="fas fa-bolt"></i> VFA
+                        </button>
+                        <button onclick="setCalc('shrink')" class="menu-btn" data-calc="shrink">
+                            <i class="fas fa-expand"></i> Escala
+                        </button>
                     </div>
+                </div>
 
-                    <div class="lg:col-span-9 space-y-8">
-                        <div class="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 md:p-10 backdrop-blur-md relative shadow-2xl overflow-visible">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 relative z-10">
-                                
-                                <div class="space-y-8 text-left">
-                                    <h3 class="text-2xl font-bold flex items-center gap-4 uppercase tracking-tighter text-slate-100 italic">
-                                        <i class="fas fa-microchip text-[#8b5cf6] text-[24px]"></i> Entrada de Datos
-                                    </h3>
-                                    
-                                    <div class="space-y-6">
-                                        <!-- Inputs Flujo -->
-                                        <div id="inputs-flow" class="calc-group block space-y-6">
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Flujo Actual</label>
-                                                <input type="number" id="flow-c" value="0.98" step="0.01" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                                <p class="text-xs text-slate-700 px-1 italic font-bold uppercase tracking-tighter">Slicer config</p>
-                                            </div>
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Modificador del Bloque</label>
-                                                <input type="number" id="flow-m" value="5" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                                <p class="text-xs text-slate-700 px-1 italic font-bold uppercase tracking-tighter">Bloque impreso</p>
-                                            </div>
-                                        </div>
-
-                                        <!-- Inputs PA -->
-                                        <div id="inputs-pa" class="calc-group hidden space-y-6">
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Valor Inicial</label>
-                                                <input type="number" id="pa-start" value="0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Paso (Step)</label>
-                                                <input type="number" id="pa-step" value="0.02" step="0.01" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Altura Medida</label>
-                                                <input type="number" id="pa-h" value="10" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                        </div>
-
-                                        <!-- Inputs Vol -->
-                                        <div id="inputs-vol" class="calc-group hidden space-y-6">
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Inicio (mm³/s)</label>
-                                                <input type="number" id="vol-start" value="5" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Paso</label>
-                                                <input type="number" id="vol-step" value="0.5" step="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Altura Fallo</label>
-                                                <input type="number" id="vol-h" value="20" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                        </div>
-
-                                        <!-- Inputs VFA -->
-                                        <div id="inputs-vfa" class="calc-group hidden space-y-6">
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Velocidad Inicial</label>
-                                                <input type="number" id="vfa-start" value="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Incremento</label>
-                                                <input type="number" id="vfa-step" value="20" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Nivel</label>
-                                                <input type="number" id="vfa-level" value="3" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                            </div>
-                                        </div>
-
-                                        <!-- Inputs Shrink -->
-                                        <div id="inputs-shrink" class="calc-group hidden space-y-6">
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Medida en Slicer (mm)</label>
-                                                <input type="number" id="shrink-t" value="100" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                                <p class="text-xs text-slate-700 px-1 italic font-bold uppercase tracking-tighter">Lo que debería medir</p>
-                                            </div>
-                                            <div class="space-y-2 group text-left">
-                                                <label class="text-xs md:text-sm font-black uppercase text-slate-500 tracking-wider group-focus-within:text-[#8b5cf6] transition-colors font-mono tracking-tighter">Medida con Calibre (mm)</label>
-                                                <input type="number" id="shrink-m" value="99.2" step="0.1" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-5 py-4 text-base md:text-lg text-white focus:outline-none focus:ring-2 focus:ring-[#8b5cf6]/50 focus:border-[#8b5cf6] transition-all font-mono shadow-inner" oninput="calcResult()">
-                                                <p class="text-xs text-slate-700 px-1 italic font-bold uppercase tracking-tighter">Lo que mide fría</p>
-                                            </div>
-                                        </div>
-                                    </div>
+                <div style="display: flex; flex-direction: column; gap: 32px;">
+                    <div class="calc-hero">
+                        <div>
+                            <h3 class="section-title"><i class="fas fa-microchip"></i> Entrada de Datos</h3>
+                            
+                            <div id="inputs-flow" class="calc-group active">
+                                <div class="input-wrapper">
+                                    <label class="input-label">Flujo Actual</label>
+                                    <input type="number" id="flow-c" value="0.98" step="0.01" class="input-field" oninput="calcResult()">
+                                    <p class="input-hint">Slicer config</p>
                                 </div>
-
-                                <div class="flex flex-col items-center justify-center text-center p-8 bg-[#8b5cf6]/5 rounded-3xl border-2 border-dashed border-[#8b5cf6]/20 min-h-[320px] overflow-hidden relative shadow-inner">
-                                    <p class="text-[#8b5cf6] text-xs font-black uppercase tracking-widest mb-2 font-mono">Valor Sugerido</p>
-                                    <button onclick="switchTab('guide')" class="text-xs text-slate-500 hover:text-[#8b5cf6] uppercase font-bold tracking-tighter mb-5 flex items-center gap-2 transition-colors underline underline-offset-4 decoration-[#8b5cf6]/30 italic">
-                                        <i class="fas fa-book-open"></i> Ver manual técnico completo
-                                    </button>
-                                    
-                                    <div id="result-val" class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white leading-tight transition-all tabular-nums tracking-tighter drop-shadow-xl">
-                                        1.0290
-                                    </div>
-                                    
-                                    <div class="flex gap-3 w-full max-w-[280px] mt-10">
-                                        <button id="btn-copy" onclick="copyRes()" class="flex-1 flex items-center justify-center gap-3 px-5 py-4.5 rounded-2xl font-bold transition-all transform active:scale-95 shadow-xl bg-[#8b5cf6] hover:bg-violet-400 text-white shadow-[#8b5cf6]/30">
-                                            <i class="fas fa-clipboard text-[22px]"></i> <span class="text-base">Copiar</span>
-                                        </button>
-                                        <button id="btn-save" onclick="saveRes()" class="p-4.5 rounded-2xl transition-all border shadow-lg group bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white border-slate-700">
-                                            <i class="fas fa-floppy-disk text-[22px] group-active:scale-90 transition-transform"></i>
-                                        </button>
-                                    </div>
-                                    <p id="mat-label-res" class="mt-5 text-[10px] text-slate-500 italic uppercase font-black tracking-widest opacity-40">* PLA profile optimized</p>
+                                <div class="input-wrapper">
+                                    <label class="input-label">Modificador del Bloque</label>
+                                    <input type="number" id="flow-m" value="5" class="input-field" oninput="calcResult()">
+                                    <p class="input-hint">Bloque impreso</p>
                                 </div>
+                            </div>
 
+                            <div id="inputs-pa" class="calc-group">
+                                <div class="input-wrapper">
+                                    <label class="input-label">Valor Inicial</label>
+                                    <input type="number" id="pa-start" value="0" class="input-field" oninput="calcResult()">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="input-label">Paso (Step)</label>
+                                    <input type="number" id="pa-step" value="0.02" step="0.01" class="input-field" oninput="calcResult()">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="input-label">Altura Medida</label>
+                                    <input type="number" id="pa-h" value="10" class="input-field" oninput="calcResult()">
+                                </div>
+                            </div>
+
+                            <div id="inputs-vol" class="calc-group">
+                                <div class="input-wrapper">
+                                    <label class="input-label">Inicio (mm³/s)</label>
+                                    <input type="number" id="vol-start" value="5" class="input-field" oninput="calcResult()">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="input-label">Paso</label>
+                                    <input type="number" id="vol-step" value="0.5" step="0.1" class="input-field" oninput="calcResult()">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="input-label">Altura Fallo</label>
+                                    <input type="number" id="vol-h" value="20" class="input-field" oninput="calcResult()">
+                                </div>
+                            </div>
+
+                            <div id="inputs-vfa" class="calc-group">
+                                <div class="input-wrapper">
+                                    <label class="input-label">Velocidad Inicial</label>
+                                    <input type="number" id="vfa-start" value="100" class="input-field" oninput="calcResult()">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="input-label">Incremento</label>
+                                    <input type="number" id="vfa-step" value="20" class="input-field" oninput="calcResult()">
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="input-label">Nivel</label>
+                                    <input type="number" id="vfa-level" value="3" class="input-field" oninput="calcResult()">
+                                </div>
+                            </div>
+
+                            <div id="inputs-shrink" class="calc-group">
+                                <div class="input-wrapper">
+                                    <label class="input-label">Medida en Slicer (mm)</label>
+                                    <input type="number" id="shrink-t" value="100" class="input-field" oninput="calcResult()">
+                                    <p class="input-hint">Lo que debería medir</p>
+                                </div>
+                                <div class="input-wrapper">
+                                    <label class="input-label">Medida con Calibre (mm)</label>
+                                    <input type="number" id="shrink-m" value="99.2" step="0.1" class="input-field" oninput="calcResult()">
+                                    <p class="input-hint">Lo que mide fría</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="bg-slate-900/40 p-8 rounded-3xl border border-slate-800 shadow-inner">
-                            <div class="flex items-center justify-between mb-5 px-1 text-left">
-                                <h4 class="text-sm font-black uppercase text-slate-500 tracking-widest flex items-center gap-2 font-mono italic">
-                                    <i class="fas fa-clock-rotate-left text-[#8b5cf6]"></i> Guardados / Historial
-                                </h4>
-                                <button id="btn-clear-history" onclick="clearHistory()" class="text-xs font-black uppercase text-red-500/60 hover:text-red-500 flex items-center gap-2 transition-colors group" style="display: none;">
-                                    <i class="fas fa-trash-can group-hover:scale-110 transition-transform"></i> Borrar Todo
+                        <div class="result-section">
+                            <p class="result-label">Valor Sugerido</p>
+                            <button onclick="switchTab('guide')" class="link-btn">
+                                <i class="fas fa-book-open"></i> Ver manual técnico
+                            </button>
+                            
+                            <div class="result-value" id="result-val">1.0290</div>
+                            
+                            <div class="action-buttons">
+                                <button id="btn-copy" onclick="copyRes()" class="btn btn-primary">
+                                    <i class="fas fa-clipboard"></i> <span>Copiar</span>
+                                </button>
+                                <button id="btn-save" onclick="saveRes()" class="btn btn-secondary">
+                                    <i class="fas fa-floppy-disk"></i>
                                 </button>
                             </div>
-                            <div id="history-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <p class="text-sm text-slate-600 italic py-3 font-sans text-center w-full uppercase tracking-widest col-span-full">Sin datos guardados</p>
-                            </div>
+                            <p class="result-note" id="mat-label-res">* PLA profile optimized</p>
+                        </div>
+                    </div>
+
+                    <div class="history-card">
+                        <div class="history-header">
+                            <h4 class="history-title">
+                                <i class="fas fa-clock-rotate-left"></i> Guardados / Historial
+                            </h4>
+                            <button id="btn-clear-history" onclick="clearHistory()" class="btn-clear">
+                                <i class="fas fa-trash-can"></i> Borrar Todo
+                            </button>
+                        </div>
+                        <div id="history-list" class="history-grid">
+                            <p class="empty-history">Sin datos guardados</p>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- CONTENEDOR AYUDA -->
-            <div id="tab-guide" class="hidden animate-in fade-in duration-500 pb-24">
-                <div class="grid grid-cols-1 gap-5 text-left mb-8">
-                    
-                    <details class="bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group">
-                        <summary class="w-full flex items-center justify-between p-7 cursor-pointer outline-none">
-                            <div class="flex items-center gap-5">
-                                <div class="p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors">
-                                    <i class="fas fa-temperature-half text-[#8b5cf6] text-[24px]"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors">1. Torre de Temperatura (Temp Tower)</h3>
-                                    <p class="text-xs text-[#8b5cf6] uppercase font-black tracking-widest">Guía Técnica</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down text-slate-500 text-[24px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 text-left">
-                            <div class="space-y-4">
-                                <p class="text-slate-300 text-base md:text-lg leading-relaxed font-semibold">Este es el cimiento de cualquier calibración exitosa. Antes de tocar flujos o velocidades, debemos conocer el límite térmico del polímero específico.</p>
-                                <div class="p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed">
-                                    • <strong>Rangos técnicos típicos:</strong> PLA (190-230°C), PETG (235-260°C), ABS/ASA (245-275°C), TPU (215-240°C). <br/>
-                                    • <strong>Metodología profesional:</strong> Inicie la torre en el valor máximo recomendado por el fabricante y decrezca cada 5°C. Esto permite observar cómo cambia la viscosidad y el brillo.<br/>
-                                    • <strong>Criterios de éxito:</strong> La temperatura ideal es la más baja posible que mantenga una adhesión de capas irrompible manualmente y puentes perfectamente rectos. Si la pieza se rompe fácil entre capas, suba 5-10°C.
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group">
-                        <summary class="w-full flex items-center justify-between p-7 cursor-pointer outline-none">
-                            <div class="flex items-center gap-5">
-                                <div class="p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors">
-                                    <i class="fas fa-chart-line text-[#8b5cf6] text-[24px]"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors">2. Relación de Flujo (Flow Ratio)</h3>
-                                    <p class="text-xs text-[#8b5cf6] uppercase font-black tracking-widest">Guía Técnica</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down text-slate-500 text-[24px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 text-left">
-                            <div class="space-y-4">
-                                <p class="text-slate-300 text-base md:text-lg leading-relaxed font-semibold">El Ratio de Flujo (o Multiplicador de Extrusión) ajusta el volumen real de plástico respecto al comando del Slicer. Un error del 1% arruina los encajes mecánicos y la estética.</p>
-                                <div class="p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed">
-                                    • <strong>Pass 1 (Grueso):</strong> Imprima bloques de -20 a +10. Busque el que tenga la superficie 100% cerrada pero sin rebabas en los bordes. <br/>
-                                    • <strong>Pass 2 (Fino):</strong> Imprima bloques de -9 a +1 para ajuste micrométrico. <br/>
-                                    • <strong>Nota de inspección:</strong> Use luz lateral rasante. Si ve huecos entre las líneas de la tapa superior, falta flujo. Si ve crestas o picos donde la boquilla arrastra material, sobra flujo.
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group">
-                        <summary class="w-full flex items-center justify-between p-7 cursor-pointer outline-none">
-                            <div class="flex items-center gap-5">
-                                <div class="p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors">
-                                    <i class="fas fa-sliders text-[#8b5cf6] text-[24px]"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors">3. Avance de Presión (Pressure Advance)</h3>
-                                    <p class="text-xs text-[#8b5cf6] uppercase font-black tracking-widest">Guía Técnica</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down text-slate-500 text-[24px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 text-left">
-                            <div class="space-y-4">
-                                <p class="text-slate-300 text-base md:text-lg leading-relaxed font-semibold">El Pressure Advance (PA) compensa la elasticidad del filamento y la inercia del fundido dentro del Hotend. Es vital para la nitidez en esquinas.</p>
-                                <div class="p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed">
-                                    • <strong>Qué soluciona:</strong> Elimina esquinas abultadas (over-extrusion en giros), evita hilos al final de perímetros y garantiza que el flujo sea constante al iniciar líneas nuevas.<br/>
-                                    • <strong>Metodología:</strong> Imprima la torre de PA. Mida con calibre la altura donde la esquina forma un ángulo de 90° perfecto, sin redondeos pero sin "mordidas" de falta de material. <br/>
-                                    • <strong>Valores guía:</strong> Direct Drive (0.012 - 0.045), Bowden (0.12 - 0.55). Un valor excesivo causará ruidos metálicos en el extrusor.
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group">
-                        <summary class="w-full flex items-center justify-between p-7 cursor-pointer outline-none">
-                            <div class="flex items-center gap-5">
-                                <div class="p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors">
-                                    <i class="fas fa-gauge-high text-[#8b5cf6] text-[24px]"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors">4. Límite de Velocidad Volumétrica</h3>
-                                    <p class="text-xs text-[#8b5cf6] uppercase font-black tracking-widest">Guía Técnica</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down text-slate-500 text-[24px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 text-left">
-                            <div class="space-y-4">
-                                <p class="text-slate-300 text-base md:text-lg leading-relaxed font-semibold">Determina el límite físico real de su Hotend (mm³/s). Es el "techo" de rendimiento de su hardware, por encima del cual el motor saltará o habrá subextrusión severa.</p>
-                                <div class="p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 space-y-4 shadow-inner">
-                                    <p class="font-bold text-[#8b5cf6] uppercase tracking-tighter text-xs">Límites de Referencia:</p>
-                                    <div class="flex flex-col border-l-2 border-[#8b5cf6]/30 pl-3">
-                                        <span class="text-white font-bold px-1 rounded-sm border-b border-dashed border-[#8b5cf6] w-fit">Hotend V6</span>
-                                        <p class="text-xs italic mt-1">Hotend clásico de E3D. Zona de fusión corta (~12mm). Ideal para precisión pero limitado en caudal máximo.</p>
-                                        <span class="text-white font-mono text-base mt-1">12 - 15 mm³/s</span>
-                                    </div>
-                                    <div class="flex flex-col border-l-2 border-[#8b5cf6]/30 pl-3 mt-3">
-                                        <span class="text-white font-bold px-1 rounded-sm border-b border-dashed border-[#8b5cf6] w-fit">Hotend Volcano</span>
-                                        <p class="text-xs italic mt-1">Hotend de alta capacidad. Bloque vertical con zona de fusión de ~20mm. Permite duplicar la velocidad de extrusión.</p>
-                                        <span class="text-white font-mono text-base mt-1">24 - 32 mm³/s</span>
-                                    </div>
-                                    <div class="flex flex-col border-l-2 border-[#8b5cf6]/30 pl-3 mt-3">
-                                        <span class="text-white font-bold px-1 rounded-sm border-b border-dashed border-[#8b5cf6] w-fit">Bambu Lab HF</span>
-                                        <p class="text-xs italic mt-1">Hotend con calentador cerámico 360° y zona de fundido optimizada para CoreXY de ultra-velocidad.</p>
-                                        <span class="text-white font-mono text-base mt-1">28 - 36 mm³/s</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group">
-                        <summary class="w-full flex items-center justify-between p-7 cursor-pointer outline-none">
-                            <div class="flex items-center gap-5">
-                                <div class="p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors">
-                                    <i class="fas fa-bolt text-[#8b5cf6] text-[24px]"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors">5. Test de Vibraciones (VFA)</h3>
-                                    <p class="text-xs text-[#8b5cf6] uppercase font-black tracking-widest">Guía Técnica</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down text-slate-500 text-[24px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 text-left">
-                            <div class="space-y-4">
-                                <p class="text-slate-300 text-base md:text-lg leading-relaxed font-semibold">Las Vertical Fine Artifacts (VFA) son marcas visuales repetitivas causadas por la resonancia de los motores paso a paso en velocidades específicas.</p>
-                                <div class="p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed">
-                                    • <strong>Metodología:</strong> Imprima una pared alta aumentando la velocidad 20mm/s cada 10mm de altura (de 20mm/s a 200mm/s). <br/>
-                                    • <strong>Análisis:</strong> Use luz lateral intensa. Notará que en ciertas velocidades la pared se ve "borrosa" o con líneas verticales, y en otras se ve como un espejo liso y brillante. <br/>
-                                    • <strong>Acción:</strong> Identifique ese escalón de máxima calidad y use esa velocidad fija para sus perímetros externos en perfiles de alta calidad.
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group">
-                        <summary class="w-full flex items-center justify-between p-7 cursor-pointer outline-none">
-                            <div class="flex items-center gap-5">
-                                <div class="p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors">
-                                    <i class="fas fa-wand-magic-sparkles text-[#8b5cf6] text-[24px]"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors">6. Costuras Invisibles (Scarf Seams)</h3>
-                                    <p class="text-xs text-[#8b5cf6] uppercase font-black tracking-widest">Guía Técnica</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down text-slate-500 text-[24px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 text-left">
-                            <div class="space-y-4 text-sm md:text-base text-slate-400 leading-relaxed">
-                                <p class="text-slate-300 text-base md:text-lg font-bold uppercase tracking-tighter">Tecnología revolucionaria para borrar la cicatriz de la costura (Z-Seam) mediante rampas geométricas diagonales.</p>
-                                <div class="p-5 bg-slate-800/30 rounded-2xl border border-slate-800 space-y-4 shadow-inner">
-                                    <p class="font-bold text-[#8b5cf6] uppercase tracking-widest text-xs">Ajustes Profesionales (OrcaSlicer):</p>
-                                    <p>• <strong>Flujo de unión (Scarf Flow):</strong> 100% ideal. Si la costura resalta, baje a 95%. Si hay un hueco, suba a 105%.</p>
-                                    <p>• <strong>Longitud de rampa (Length):</strong> 20mm estándar. Use 30-40mm en piezas cilíndricas muy grandes para una transición visual imperceptible.</p>
-                                    <p>• <strong>Pasos (Steps):</strong> 15-20 para una rampa suave sin saltos de presión bruscos.</p>
-                                    <p>• <strong>Orden de Paredes:</strong> El Scarf Joint requiere paredes internas previas para sostener físicamente la rampa de plástico fundido.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group">
-                        <summary class="w-full flex items-center justify-between p-7 cursor-pointer outline-none">
-                            <div class="flex items-center gap-5">
-                                <div class="p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors">
-                                    <i class="fas fa-expand text-[#8b5cf6] text-[24px]"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors">7. Encogimiento y Escala (Física Térmica)</h3>
-                                    <p class="text-xs text-[#8b5cf6] uppercase font-black tracking-widest">Guía Técnica</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down text-slate-500 text-[24px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 text-left">
-                            <div class="space-y-6">
-                                <div class="flex gap-4 items-start bg-slate-900/50 p-5 rounded-xl border border-slate-800 shadow-inner text-base">
-                                    <i class="fas fa-triangle-exclamation text-amber-500 shrink-0 mt-1 text-[24px]"></i>
-                                    <div>
-                                        <p class="text-slate-100 text-lg font-bold uppercase mb-2 tracking-tighter italic">Física de Polímeros vs Configuración</p>
-                                        <p class="text-slate-300 leading-relaxed font-medium">Si sus paredes miden 0.42mm perfectos pero su cubo de 100mm mide 99.2mm tras enfriarse, no es subextrusión: es contracción térmica. Al enfriarse, las moléculas se agrupan y la pieza "encoge" físicamente.</p>
-                                    </div>
-                                </div>
-                                <div class="p-5 bg-slate-800/30 rounded-xl border border-slate-800 text-sm md:text-base text-slate-400 leading-relaxed space-y-4">
-                                    <p class="font-bold text-[#8b5cf6] uppercase underline underline-offset-4 decoration-[#8b5cf6]/30">Tasas de Contracción por Material:</p>
-                                    <ul class="space-y-3">
-                                        <li>• <strong>PLA / PETG:</strong> 0.1% - 0.2%. Generalmente despreciable para uso doméstico.</li>
-                                        <li>• <strong>ABS / ASA:</strong> 0.6% - 0.9%. Obligatorio compensar con el campo "Scale" o "Shrinkage" del filamento.</li>
-                                        <li>• <strong>Nylon / PC:</strong> 1.0% - 1.6%. Contracción extrema que requiere piezas sobredimensionadas.</li>
-                                    </ul>
-                                    <div class="pt-3 border-t border-slate-700/50 text-xs italic">
-                                        <p><strong>Procedimiento:</strong> Imprima una regleta de 100mm. Mida con calibre digital de precisión cuando la pieza esté a temperatura ambiente (fría). Calcule el factor: (Medida_Slicer / Medida_Calibre).</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                    <details class="bg-slate-900/80 border border-slate-800 rounded-2xl transition-all hover:border-slate-700 shadow-lg relative overflow-visible group">
-                        <summary class="w-full flex items-center justify-between p-7 cursor-pointer outline-none">
-                            <div class="flex items-center gap-5">
-                                <div class="p-4 bg-slate-800 rounded-xl shadow-inner group-hover:bg-[#8b5cf6]/20 transition-colors">
-                                    <i class="fas fa-wind text-[#8b5cf6] text-[24px]"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-lg md:text-xl leading-tight uppercase tracking-tighter text-slate-100 italic group-hover:text-[#8b5cf6] transition-colors">8. Diagnóstico de Humedad y Secado</h3>
-                                    <p class="text-xs text-[#8b5cf6] uppercase font-black tracking-widest">Guía Técnica</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down text-slate-500 text-[24px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="p-7 pt-0 border-t border-slate-800/50 bg-slate-900/40 text-left">
-                            <div class="space-y-6">
-                                <div class="bg-slate-950/50 p-6 rounded-xl border border-slate-800 shadow-xl">
-                                    <h4 class="font-bold text-[#8b5cf6] mb-5 uppercase tracking-tighter flex items-center gap-2 text-base md:text-lg italic">
-                                        <i class="fas fa-droplet text-[#8b5cf6]"></i> Diagnosticador de Humedad
-                                    </h4>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <button onclick="showSymptom('stringing')" id="btn-symptom-str" class="p-5 rounded-xl border text-left transition-all bg-slate-900 border-slate-800 hover:border-[#8b5cf6]/40">
-                                            <span class="text-sm block uppercase font-bold">Velo / Stringing</span>
-                                            <span class="text-xs opacity-60 leading-tight block mt-1 italic">Hilos constantes pero paredes suaves y sólidas.</span>
-                                        </button>
-                                        <button onclick="showSymptom('popping')" id="btn-symptom-pop" class="p-5 rounded-xl border text-left transition-all bg-slate-900 border-slate-800 hover:border-[#8b5cf6]/40">
-                                            <span class="text-sm block uppercase font-bold">Popping / Burbujas</span>
-                                            <span class="text-xs opacity-60 leading-tight block mt-1 italic">Explosiones en el nozzle y agujeros en las paredes externas.</span>
-                                        </button>
-                                    </div>
-                                    <div id="symptom-res" style="display: none;" class="mt-5 p-5 bg-[#8b5cf6]/10 rounded-lg border border-[#8b5cf6]/30 text-sm md:text-base leading-relaxed italic text-slate-100 animate-in fade-in"></div>
-                                </div>
-                                <div class="overflow-hidden rounded-xl border border-slate-800 shadow-xl bg-slate-900/40">
-                                    <table class="w-full text-left text-sm md:text-base">
-                                        <thead class="bg-slate-800 text-slate-300 font-bold uppercase text-xs">
-                                            <tr><th class="p-4">Material</th><th class="p-4">Temp Secado</th><th class="p-4 font-mono">Tiempo</th><th class="p-4 hidden md:table-cell">Nota Técnica</th></tr>
-                                        </thead>
-                                        <tbody class="divide-y divide-slate-800/50">
-                                            <tr class="hover:bg-[#8b5cf6]/5 transition-colors">
-                                                <td class="p-4 font-bold text-[#8b5cf6]">PLA</td><td class="p-4 font-mono">45-50°C</td><td class="p-4 font-mono">4-6h</td><td class="p-4 text-slate-500 italic hidden md:table-cell text-xs">Evita el velo de hilos finos (angel hair).</td>
-                                            </tr>
-                                            <tr class="hover:bg-[#8b5cf6]/5 transition-colors">
-                                                <td class="p-4 font-bold text-[#8b5cf6]">PETG</td><td class="p-4 font-mono">60-65°C</td><td class="p-4 font-mono">6-8h</td><td class="p-4 text-slate-500 italic hidden md:table-cell text-xs">Crítico para evitar el goteo constante.</td>
-                                            </tr>
-                                            <tr class="hover:bg-[#8b5cf6]/5 transition-colors">
-                                                <td class="p-4 font-bold text-[#8b5cf6]">ABS/ASA</td><td class="p-4 font-mono">70-80°C</td><td class="p-4 font-mono">6h+</td><td class="p-4 text-slate-500 italic hidden md:table-cell text-xs">Elimina micro-burbujas en las paredes.</td>
-                                            </tr>
-                                            <tr class="hover:bg-[#8b5cf6]/5 transition-colors">
-                                                <td class="p-4 font-bold text-[#8b5cf6]">Nylon/TPU</td><td class="p-4 font-mono">75-85°C</td><td class="p-4 font-mono">12h+</td><td class="p-4 text-slate-500 italic hidden md:table-cell text-xs">Obligatorio: Higroscópicos en pocas horas.</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </details>
-
-                </div>
-
-                <div class="bg-gradient-to-r from-violet-900/20 to-slate-900/30 p-10 rounded-3xl border border-[#8b5cf6]/30 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl relative overflow-visible">
-                    <div class="flex items-start gap-5 text-left">
-                        <div class="p-4 bg-slate-800 rounded-2xl shadow-inner text-[#8b5cf6]">
-                            <i class="fas fa-book-open text-[28px]"></i>
-                        </div>
-                        <div class="space-y-2 text-left">
-                            <h4 class="text-2xl font-bold text-white tracking-tight italic">Manual de Calibración</h4>
-                            <p class="text-base text-slate-400 max-w-md leading-relaxed">Documentación técnica oficial de OrcaSlicer condensada para configuración profesional.</p>
-                        </div>
-                    </div>
-                    <a href="https://github.com/OrcaSlicer/OrcaSlicer/wiki/Calibration" target="_blank" rel="noreferrer" class="flex items-center gap-4 bg-[#8b5cf6] text-white px-10 py-4 rounded-xl font-bold hover:bg-violet-400 transition-all shadow-lg hover:shadow-[#8b5cf6]/30 group text-base">
-                        Wiki GitHub <i class="fas fa-external-link-alt group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
-                    </a>
-                </div>
-            </div>
-
-            <footer class="mt-14 pt-8 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8 text-slate-500 pb-12 w-full">
-                <div class="flex flex-col items-center md:items-start gap-2 text-center md:text-left">
-                    <div class="flex items-center gap-2 font-mono text-sm text-slate-400 font-bold uppercase tracking-tighter">
-                        <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span> 
-                        Sky Toolbox
-                    </div>
-                    <a href="https://instagram.com/sky3darg" target="_blank" rel="noreferrer" class="text-sm uppercase font-black tracking-widest text-[#8b5cf6] hover:text-violet-400 transition-colors flex items-center gap-2">
-                        <i class="fa-brands fa-instagram text-[16px]"></i> @sky3darg
-                    </a>
-                    <p class="text-[10px] uppercase font-black tracking-widest italic text-slate-600 mt-1">Desarrollado por SkyDev</p>
-                </div>
-                <div class="flex flex-col items-center md:items-end gap-4 text-xs font-medium text-slate-600 text-center md:text-right">
-                    <div class="flex flex-wrap justify-center md:justify-end gap-4 md:gap-6 text-[10px] sm:text-xs font-black uppercase tracking-widest not-italic mb-1 text-slate-500">
-                        <a href="https://sky3d.com.ar" target="_blank" rel="noreferrer" class="hover:text-[#8b5cf6] transition-colors flex items-center gap-1.5"><i class="fas fa-globe"></i> Web Principal</a>
-                        <a href="https://bambulab.com" target="_blank" rel="noreferrer" class="hover:text-[#8b5cf6] transition-colors flex items-center gap-1.5"><i class="fas fa-external-link-alt"></i> Bambu Lab</a>
-                        <a href="https://github.com/SoftFever/OrcaSlicer" target="_blank" rel="noreferrer" class="hover:text-[#8b5cf6] transition-colors flex items-center gap-1.5"><i class="fas fa-external-link-alt"></i> OrcaSlicer</a>
-                    </div>
-                    <span>&copy; 2026 Sky 3D - Catamarca, Argentina</span>
-                </div>
-            </footer>
-
         </div>
+
+        <!-- GUIA / AYUDA -->
+        <div id="tab-guide" class="tab-content">
+            <div class="guide-container">
+                
+                <details>
+                    <summary>
+                        <div class="sum-left">
+                            <div class="sum-icon"><i class="fas fa-temperature-half"></i></div>
+                            <div>
+                                <h3 class="sum-title">1. Torre de Temperatura (Temp Tower)</h3>
+                                <p class="sum-badge">Guía Técnica</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down sum-arrow"></i>
+                    </summary>
+                    <div class="det-content">
+                        <p>Este es el cimiento de cualquier calibración exitosa. Antes de tocar flujos o velocidades, debemos conocer el límite térmico del polímero específico.</p>
+                        <div class="det-box">
+                            • <strong>Rangos técnicos típicos:</strong> PLA (190-230°C), PETG (235-260°C), ABS/ASA (245-275°C), TPU (215-240°C). <br/><br/>
+                            • <strong>Metodología profesional:</strong> Inicie la torre en el valor máximo recomendado por el fabricante y decrezca cada 5°C. Esto permite observar cómo cambia la viscosidad y el brillo.<br/><br/>
+                            • <strong>Criterios de éxito:</strong> La temperatura ideal es la más baja posible que mantenga una adhesión de capas irrompible manualmente y puentes perfectamente rectos. Si la pieza se rompe fácil entre capas, suba 5-10°C.
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="sum-left">
+                            <div class="sum-icon"><i class="fas fa-chart-line"></i></div>
+                            <div>
+                                <h3 class="sum-title">2. Relación de Flujo (Flow Ratio)</h3>
+                                <p class="sum-badge">Guía Técnica</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down sum-arrow"></i>
+                    </summary>
+                    <div class="det-content">
+                        <p>El Ratio de Flujo (o Multiplicador de Extrusión) ajusta el volumen real de plástico respecto al comando del Slicer. Un error del 1% arruina los encajes mecánicos y la estética.</p>
+                        <div class="det-box">
+                            • <strong>Pass 1 (Grueso):</strong> Imprima bloques de -20 a +10. Busque el que tenga la superficie 100% cerrada pero sin rebabas en los bordes. <br/><br/>
+                            • <strong>Pass 2 (Fino):</strong> Imprima bloques de -9 a +1 para ajuste micrométrico. <br/><br/>
+                            • <strong>Nota de inspección:</strong> Use luz lateral rasante. Si ve huecos entre las líneas de la tapa superior, falta flujo. Si ve crestas o picos donde la boquilla arrastra material, sobra flujo.
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="sum-left">
+                            <div class="sum-icon"><i class="fas fa-sliders"></i></div>
+                            <div>
+                                <h3 class="sum-title">3. Avance de Presión (Pressure Advance)</h3>
+                                <p class="sum-badge">Guía Técnica</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down sum-arrow"></i>
+                    </summary>
+                    <div class="det-content">
+                        <p>El Pressure Advance (PA) compensa la elasticidad del filamento y la inercia del fundido dentro del Hotend. Es vital para la nitidez en esquinas.</p>
+                        <div class="det-box">
+                            • <strong>Qué soluciona:</strong> Elimina esquinas abultadas (over-extrusion en giros), evita hilos al final de perímetros y garantiza que el flujo sea constante al iniciar líneas nuevas.<br/><br/>
+                            • <strong>Metodología:</strong> Imprima la torre de PA. Mida con calibre la altura donde la esquina forma un ángulo de 90° perfecto, sin redondeos pero sin "mordidas" de falta de material. <br/><br/>
+                            • <strong>Valores guía:</strong> Direct Drive (0.012 - 0.045), Bowden (0.12 - 0.55). Un valor excesivo causará ruidos metálicos en el extrusor.
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="sum-left">
+                            <div class="sum-icon"><i class="fas fa-gauge-high"></i></div>
+                            <div>
+                                <h3 class="sum-title">4. Límite de Velocidad Volumétrica</h3>
+                                <p class="sum-badge">Guía Técnica</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down sum-arrow"></i>
+                    </summary>
+                    <div class="det-content">
+                        <p>Determina el límite físico real de su Hotend (mm³/s). Es el "techo" de rendimiento de su hardware, por encima del cual el motor saltará o habrá subextrusión severa.</p>
+                        <div class="det-box">
+                            <h4 class="det-box-title">Límites de Referencia:</h4>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <strong style="color:var(--accent);">Hotend V6</strong>
+                                <p style="font-size:13px; margin:4px 0;">Hotend clásico de E3D. Zona de fusión corta (~12mm). Ideal para precisión pero limitado en caudal máximo.</p>
+                                <span class="mono">12 - 15 mm³/s</span>
+                            </div>
+                            
+                            <div style="margin-bottom: 16px;">
+                                <strong style="color:var(--accent);">Hotend Volcano</strong>
+                                <p style="font-size:13px; margin:4px 0;">Hotend de alta capacidad. Bloque vertical con zona de fusión de ~20mm. Permite duplicar la velocidad de extrusión.</p>
+                                <span class="mono">24 - 32 mm³/s</span>
+                            </div>
+                            
+                            <div>
+                                <strong style="color:var(--accent);">Bambu Lab HF</strong>
+                                <p style="font-size:13px; margin:4px 0;">Hotend con calentador cerámico 360° y zona de fundido optimizada para CoreXY de ultra-velocidad.</p>
+                                <span class="mono">28 - 36 mm³/s</span>
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="sum-left">
+                            <div class="sum-icon"><i class="fas fa-bolt"></i></div>
+                            <div>
+                                <h3 class="sum-title">5. Test de Vibraciones (VFA)</h3>
+                                <p class="sum-badge">Guía Técnica</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down sum-arrow"></i>
+                    </summary>
+                    <div class="det-content">
+                        <p>Las Vertical Fine Artifacts (VFA) son marcas visuales repetitivas causadas por la resonancia de los motores paso a paso en velocidades específicas.</p>
+                        <div class="det-box">
+                            • <strong>Metodología:</strong> Imprima una pared alta aumentando la velocidad 20mm/s cada 10mm de altura (de 20mm/s a 200mm/s). <br/><br/>
+                            • <strong>Análisis:</strong> Use luz lateral intensa. Notará que en ciertas velocidades la pared se ve "borrosa" o con líneas verticales, y en otras se ve como un espejo liso y brillante. <br/><br/>
+                            • <strong>Acción:</strong> Identifique ese escalón de máxima calidad y use esa velocidad fija para sus perímetros externos en perfiles de alta calidad.
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="sum-left">
+                            <div class="sum-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+                            <div>
+                                <h3 class="sum-title">6. Costuras Invisibles (Scarf Seams)</h3>
+                                <p class="sum-badge">Guía Técnica</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down sum-arrow"></i>
+                    </summary>
+                    <div class="det-content">
+                        <p>Tecnología revolucionaria para borrar la cicatriz de la costura (Z-Seam) mediante rampas geométricas diagonales.</p>
+                        <div class="det-box">
+                            <h4 class="det-box-title">Ajustes Profesionales (OrcaSlicer):</h4>
+                            <p>• <strong>Flujo de unión (Scarf Flow):</strong> 100% ideal. Si la costura resalta, baje a 95%. Si hay un hueco, suba a 105%.</p><br/>
+                            <p>• <strong>Longitud de rampa (Length):</strong> 20mm estándar. Use 30-40mm en piezas cilíndricas muy grandes para una transición visual imperceptible.</p><br/>
+                            <p>• <strong>Pasos (Steps):</strong> 15-20 para una rampa suave sin saltos de presión bruscos.</p><br/>
+                            <p>• <strong>Orden de Paredes:</strong> El Scarf Joint requiere paredes internas previas para sostener físicamente la rampa de plástico fundido.</p>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="sum-left">
+                            <div class="sum-icon"><i class="fas fa-expand"></i></div>
+                            <div>
+                                <h3 class="sum-title">7. Encogimiento y Escala (Física Térmica)</h3>
+                                <p class="sum-badge">Guía Técnica</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down sum-arrow"></i>
+                    </summary>
+                    <div class="det-content">
+                        <div style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); padding: 20px; border-radius: 16px; display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px;">
+                            <i class="fas fa-triangle-exclamation" style="color: #f59e0b; font-size: 24px;"></i>
+                            <div>
+                                <h4 style="color: white; font-weight: 800; font-style: italic; margin-bottom: 8px;">Física de Polímeros vs Configuración</h4>
+                                <p style="font-size: 14px;">Si sus paredes miden 0.42mm perfectos pero su cubo de 100mm mide 99.2mm tras enfriarse, no es subextrusión: es contracción térmica. Al enfriarse, las moléculas se agrupan y la pieza "encoge" físicamente.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="det-box">
+                            <h4 class="det-box-title">Tasas de Contracción por Material:</h4>
+                            <p>• <strong>PLA / PETG:</strong> 0.1% - 0.2%. Generalmente despreciable para uso doméstico.</p><br/>
+                            <p>• <strong>ABS / ASA:</strong> 0.6% - 0.9%. Obligatorio compensar con el campo "Scale" o "Shrinkage" del filamento.</p><br/>
+                            <p>• <strong>Nylon / PC:</strong> 1.0% - 1.6%. Contracción extrema que requiere piezas sobredimensionadas.</p>
+                            
+                            <div style="border-top: 1px solid var(--border); margin-top: 20px; padding-top: 16px; font-size: 13px; font-style: italic;">
+                                <strong>Procedimiento:</strong> Imprima una regleta de 100mm. Mida con calibre digital de precisión cuando la pieza esté a temperatura ambiente (fría). Calcule el factor: (Medida_Slicer / Medida_Calibre).
+                            </div>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>
+                        <div class="sum-left">
+                            <div class="sum-icon"><i class="fas fa-wind"></i></div>
+                            <div>
+                                <h3 class="sum-title">8. Diagnóstico de Humedad y Secado</h3>
+                                <p class="sum-badge">Guía Técnica</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-down sum-arrow"></i>
+                    </summary>
+                    <div class="det-content">
+                        <div class="det-box" style="margin-top: 0; background: var(--bg);">
+                            <h4 class="det-box-title" style="font-size: 16px; display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+                                <i class="fas fa-droplet"></i> Diagnosticador de Humedad
+                            </h4>
+                            
+                            <div class="symptom-grid">
+                                <button onclick="showSymptom('stringing')" id="btn-symptom-str" class="symptom-btn">
+                                    <span class="symptom-title">Velo / Stringing</span>
+                                    <span class="symptom-desc">Hilos constantes pero paredes suaves y sólidas.</span>
+                                </button>
+                                <button onclick="showSymptom('popping')" id="btn-symptom-pop" class="symptom-btn">
+                                    <span class="symptom-title">Popping / Burbujas</span>
+                                    <span class="symptom-desc">Explosiones en el nozzle y agujeros en las paredes externas.</span>
+                                </button>
+                            </div>
+                            
+                            <div id="symptom-res" class="symptom-result"></div>
+                        </div>
+
+                        <div class="det-box" style="padding: 0; overflow: hidden; background: var(--bg);">
+                            <table>
+                                <thead>
+                                    <tr><th>Material</th><th>Temp Secado</th><th>Tiempo</th><th class="note-col">Nota Técnica</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="mat-name">PLA</td><td class="mono">45-50°C</td><td class="mono">4-6h</td><td class="note-col">Evita el velo de hilos finos (angel hair).</td></tr>
+                                    <tr><td class="mat-name">PETG</td><td class="mono">60-65°C</td><td class="mono">6-8h</td><td class="note-col">Crítico para evitar el goteo constante.</td></tr>
+                                    <tr><td class="mat-name">ABS/ASA</td><td class="mono">70-80°C</td><td class="mono">6h+</td><td class="note-col">Elimina micro-burbujas en las paredes.</td></tr>
+                                    <tr><td class="mat-name">Nylon/TPU</td><td class="mono">75-85°C</td><td class="mono">12h+</td><td class="note-col">Obligatorio: Higroscópicos en pocas horas.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </details>
+
+            </div>
+
+            <!-- WIKI -->
+            <div class="wiki-card">
+                <div class="wiki-info">
+                    <div class="wiki-icon"><i class="fas fa-book-open"></i></div>
+                    <div class="wiki-text">
+                        <h4>Manual de Calibración</h4>
+                        <p>Documentación técnica oficial de OrcaSlicer condensada para configuración profesional.</p>
+                    </div>
+                </div>
+                <a href="https://github.com/OrcaSlicer/OrcaSlicer/wiki/Calibration" target="_blank" rel="noopener noreferrer" class="wiki-btn">
+                    Wiki GitHub <i class="fas fa-external-link-alt"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="footer-left">
+                <div class="footer-brand">
+                    <span class="dot"></span> Sky Toolbox
+                </div>
+                <a href="https://instagram.com/sky3darg" target="_blank" rel="noopener noreferrer" class="footer-social">
+                    <i class="fa-brands fa-instagram"></i> @sky3darg
+                </a>
+                <p class="footer-dev">Desarrollado por SkyDev</p>
+            </div>
+            
+            <div class="footer-right">
+                <div class="footer-links">
+                    <a href="https://sky3d.com.ar" target="_blank" rel="noopener noreferrer"><i class="fas fa-globe"></i> Web Principal</a>
+                    <a href="https://bambulab.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Bambu Lab</a>
+                    <a href="https://github.com/SoftFever/OrcaSlicer" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> OrcaSlicer</a>
+                </div>
+                <span class="footer-copy">&copy; 2026 Sky 3D - Catamarca, Argentina</span>
+            </div>
+        </footer>
+
     </div>
 
+    <!-- LOGICA PURA JAVASCRIPT -->
     <script>
         const presets = {
             PLA: { flow: 0.98, paStep: 0.02, volStart: 5, volStep: 0.5 },
@@ -572,40 +683,47 @@
         };
 
         function switchTab(tab) {
-            document.getElementById('tab-calculators').style.display = tab === 'calculators' ? 'block' : 'none';
-            document.getElementById('tab-guide').style.display = tab === 'guide' ? 'block' : 'none';
+            document.getElementById('tab-calculators').classList.toggle('active', tab === 'calculators');
+            document.getElementById('tab-guide').classList.toggle('active', tab === 'guide');
             
-            const activeClass = 'flex-1 px-5 py-2 rounded-lg text-sm font-bold transition-all bg-[#8b5cf6] text-white shadow-md';
-            const inactiveClass = 'flex-1 px-5 py-2 rounded-lg text-sm font-bold transition-all text-slate-400 hover:text-white';
+            document.getElementById('btn-tab-calculators').classList.toggle('active', tab === 'calculators');
+            document.getElementById('btn-tab-guide').classList.toggle('active', tab === 'guide');
             
-            document.getElementById('btn-tab-calculators').className = tab === 'calculators' ? activeClass : inactiveClass;
-            document.getElementById('btn-tab-guide').className = tab === 'guide' ? activeClass : inactiveClass;
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function setCalc(calc) {
             currentCalc = calc;
-            document.querySelectorAll('.calc-btn').forEach(btn => {
+            
+            document.querySelectorAll('.menu-btn').forEach(btn => {
                 if(btn.dataset.calc === calc) {
-                    btn.className = 'calc-btn flex-shrink-0 flex items-center gap-4 p-4 rounded-xl border transition-all bg-[#8b5cf6]/10 border-[#8b5cf6]/50 text-[#8b5cf6] shadow-inner';
+                    btn.classList.add('active');
                 } else {
-                    btn.className = 'calc-btn flex-shrink-0 flex items-center gap-4 p-4 rounded-xl border transition-all bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700';
+                    btn.classList.remove('active');
                 }
             });
+            
             document.querySelectorAll('.calc-group').forEach(grp => {
-                grp.style.display = grp.id === 'inputs-' + calc ? 'block' : 'none';
+                if(grp.id === 'inputs-' + calc) {
+                    grp.classList.add('active');
+                } else {
+                    grp.classList.remove('active');
+                }
             });
+            
             calcResult();
         }
 
         function changeMaterial(mat) {
             currentMat = mat;
             const p = presets[mat] || presets.Otros;
+            
             document.getElementById('flow-c').value = p.flow;
             document.getElementById('pa-step').value = p.paStep;
             document.getElementById('vol-start').value = p.volStart;
             document.getElementById('vol-step').value = p.volStep;
             document.getElementById('mat-label-res').innerText = '* ' + mat + ' profile optimized';
+            
             calcResult();
         }
 
@@ -641,11 +759,12 @@
             document.body.removeChild(el);
 
             const btn = document.getElementById('btn-copy');
-            btn.innerHTML = '<i class="fas fa-circle-check text-[22px]"></i> <span class="text-base">¡Copiado!</span>';
-            btn.className = 'flex-1 flex items-center justify-center gap-3 px-5 py-4.5 rounded-2xl font-bold transition-all transform active:scale-95 shadow-xl bg-green-500 text-white border-green-500 shadow-green-900/20';
+            btn.innerHTML = '<i class="fas fa-circle-check"></i> <span>¡Copiado!</span>';
+            btn.classList.add('btn-success');
+            
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-clipboard text-[22px]"></i> <span class="text-base">Copiar</span>';
-                btn.className = 'flex-1 flex items-center justify-center gap-3 px-5 py-4.5 rounded-2xl font-bold transition-all transform active:scale-95 shadow-xl bg-[#8b5cf6] hover:bg-violet-400 text-white shadow-[#8b5cf6]/30';
+                btn.innerHTML = '<i class="fas fa-clipboard"></i> <span>Copiar</span>';
+                btn.classList.remove('btn-success');
             }, 2000);
         }
 
@@ -658,15 +777,17 @@
                 value: res,
                 date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             };
+            
             historyData.unshift(newItem);
             if(historyData.length > 10) historyData.pop();
             
             const btn = document.getElementById('btn-save');
-            btn.innerHTML = '<i class="fas fa-circle-check text-[22px]"></i>';
-            btn.className = 'p-4.5 rounded-2xl transition-all border shadow-lg group bg-green-600 border-green-500 text-white shadow-green-900/20';
+            btn.innerHTML = '<i class="fas fa-circle-check"></i>';
+            btn.classList.add('btn-success');
+            
             setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-floppy-disk text-[22px] group-active:scale-90 transition-transform"></i>';
-                btn.className = 'p-4.5 rounded-2xl transition-all border shadow-lg group bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white border-slate-700';
+                btn.innerHTML = '<i class="fas fa-floppy-disk"></i>';
+                btn.classList.remove('btn-success');
             }, 1500);
 
             renderHistory();
@@ -687,22 +808,23 @@
             const clearBtn = document.getElementById('btn-clear-history');
             
             if(historyData.length === 0) {
-                container.innerHTML = '<p class="text-sm text-slate-600 italic py-3 font-sans text-center w-full uppercase tracking-widest col-span-full">Sin datos guardados</p>';
+                container.innerHTML = '<p class="empty-history">Sin datos guardados</p>';
                 clearBtn.style.display = 'none';
                 return;
             }
+            
             clearBtn.style.display = 'flex';
             
             container.innerHTML = historyData.map(item => `
-                <div class="flex justify-between items-center p-4 bg-slate-950/50 rounded-xl border border-slate-800/50 hover:border-[#8b5cf6]/40 transition-colors group relative text-left">
-                    <div class="flex flex-col">
-                        <span class="text-[10px] font-black text-[#8b5cf6] uppercase tracking-tighter">${item.type}</span>
-                        <span class="text-xs text-slate-500 font-medium">${item.material} • ${item.date}</span>
+                <div class="history-item">
+                    <div class="hist-info">
+                        <span class="hist-type">${item.type}</span>
+                        <span class="hist-mat">${item.material} • ${item.date}</span>
                     </div>
-                    <div class="flex items-center gap-4">
-                        <span class="text-white font-mono font-bold text-base tracking-tight">${item.value}</span>
-                        <button onclick="deleteItem(${item.id})" class="p-2 rounded-lg text-slate-600 hover:text-red-500 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100">
-                            <i class="fas fa-trash-can text-sm"></i>
+                    <div class="hist-right">
+                        <span class="hist-val">${item.value}</span>
+                        <button onclick="deleteItem(${item.id})" class="hist-del">
+                            <i class="fas fa-trash-can"></i>
                         </button>
                     </div>
                 </div>
@@ -713,25 +835,27 @@
             const strBtn = document.getElementById('btn-symptom-str');
             const popBtn = document.getElementById('btn-symptom-pop');
             const resDiv = document.getElementById('symptom-res');
+
+            strBtn.classList.toggle('active', type === 'stringing');
+            popBtn.classList.toggle('active', type === 'popping');
+
+            resDiv.classList.add('active');
             
-            const activeClass = 'bg-[#8b5cf6] border-[#8b5cf6] text-white shadow-[0_0_20px_rgba(139,92,246,0.3)]';
-            const inactiveClass = 'bg-slate-900 border-slate-800 hover:border-[#8b5cf6]/40';
-
-            strBtn.className = `p-5 rounded-xl border text-left transition-all ${type === 'stringing' ? activeClass : inactiveClass}`;
-            popBtn.className = `p-5 rounded-xl border text-left transition-all ${type === 'popping' ? activeClass : inactiveClass}`;
-
-            resDiv.style.display = 'block';
             if (type === 'stringing') {
                 resDiv.innerHTML = `
-                    <div class="flex gap-4 text-left">
-                        <i class="fas fa-sliders text-[#8b5cf6] shrink-0 mt-1 text-[20px]"></i>
-                        <span><strong>Diagnóstico:</strong> Puede ser retracción o humedad leve. Antes de secar, asegúrese de calibrar su <strong>Pressure Advance</strong>. Si los hilos persisten incluso con PA perfecto y diferentes temperaturas, el filamento ha absorbido humedad y requiere un ciclo de secado recomendado.</span>
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        <i class="fas fa-sliders" style="color: var(--accent); font-size: 24px; margin-top: 2px;"></i>
+                        <div>
+                            <strong>Diagnóstico:</strong> Puede ser retracción o humedad leve. Antes de secar, asegúrese de calibrar su <strong>Pressure Advance</strong>. Si los hilos persisten incluso con PA perfecto y diferentes temperaturas, el filamento ha absorbido humedad y requiere un ciclo de secado recomendado.
+                        </div>
                     </div>`;
             } else {
                 resDiv.innerHTML = `
-                    <div class="flex gap-4 text-left">
-                        <i class="fas fa-triangle-exclamation text-red-500 shrink-0 mt-1 text-[20px]"></i>
-                        <span><strong>Diagnóstico:</strong> HUMEDAD CRÍTICA. ¡No pierda tiempo con ajustes de Slicer! Lo que escucha es vapor de agua a presión saliendo del nozzle. El filamento requiere un ciclo de secado recomendado (mínimo 6-12h a 55°C) antes de ser usable para impresiones de calidad.</span>
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        <i class="fas fa-triangle-exclamation" style="color: var(--danger); font-size: 24px; margin-top: 2px;"></i>
+                        <div>
+                            <strong>Diagnóstico:</strong> HUMEDAD CRÍTICA. ¡No pierda tiempo con ajustes de Slicer! Lo que escucha es vapor de agua a presión saliendo del nozzle. El filamento requiere un ciclo de secado recomendado (mínimo 6-12h a 55°C) antes de ser usable para impresiones de calidad.
+                        </div>
                     </div>`;
             }
         }
