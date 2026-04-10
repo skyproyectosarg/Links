@@ -17,7 +17,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: var(--dark-bg); 
             color: #f1f5f9;
-            font-size: 20px; 
+            font-size: 22px; 
         }
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
@@ -58,30 +58,30 @@
             <i class="fas fa-ruler-combined text-[#8b5cf6]"></i> SkyScale 3D
         </h1>
         <div class="text-center sm:text-right">
-            <p class="text-xs font-bold uppercase tracking-widest text-slate-500 italic">Cálculos de precisión técnica</p>
+            <p class="text-[12px] font-bold uppercase tracking-widest text-slate-500 italic">Cálculos de precisión técnica</p>
         </div>
     </div>
 
     <div class="app-help mb-8">
         <details class="bg-slate-900/50 border border-slate-700 rounded-2xl overflow-hidden group">
             <summary class="p-4 flex justify-between items-center bg-slate-800/50 hover:bg-slate-800 transition-colors">
-                <span class="text-sm font-black uppercase tracking-widest text-[#a78bfa]">
+                <span class="text-base font-black uppercase tracking-widest text-[#a78bfa]">
                     <i class="fas fa-info-circle mr-2"></i> Guía Técnica de Escalado
                 </span>
                 <i class="fas fa-chevron-down text-sm text-slate-500 group-open:rotate-180 transition-transform"></i>
             </summary>
-            <div class="p-6 text-base text-slate-400 space-y-4 border-t border-slate-700">
+            <div class="p-6 text-lg text-slate-400 space-y-4 border-t border-slate-700">
                 <div class="bg-amber-500/10 border-l-4 border-amber-500 p-4 mb-4 text-sm">
                     <strong class="text-amber-500 uppercase block mb-1">⚠️ Tip Técnico:</strong> 
-                    Imprimí una "rodaja" de prueba para verificar el calce. Ajustá el eje Z según el largo de tu aluminio.
+                    Imprimí una "rodaja" de prueba para verificar el calce. Ajustá el eje Z según el largo de tu aluminio[cite: 31, 32].
                 </div>
                 <div>
-                    <strong class="text-slate-200 uppercase text-sm block mb-1">1. Medición del Inserto</strong>
-                    <p>Medí el contorno superior del aluminio con cinta de modista y anotá los cm exactos.</p>
+                    <strong class="text-slate-200 uppercase text-base block mb-1">1. Medición del Inserto</strong>
+                    <p>Medí el contorno superior del aluminio con cinta de modista y anotá los cm exactos[cite: 36, 37].</p>
                 </div>
                 <div>
-                    <strong class="text-slate-200 uppercase text-sm block mb-1">2. Medición del Diseño (STL)</strong>
-                    <p>En tu slicer, medí el diámetro interno del hueco donde encastra el aluminio.</p>
+                    <strong class="text-slate-200 uppercase text-base block mb-1">2. Medición del Diseño (STL)</strong>
+                    <p>En tu slicer, medí el diámetro interno del hueco donde encastra el aluminio[cite: 38, 39].</p>
                 </div>
             </div>
         </details>
@@ -91,28 +91,28 @@
         
         <div class="bg-[#1e293b] rounded-2xl shadow-xl p-6 border-t-4 border-[#8b5cf6] relative">
             <div class="flex justify-between items-center mb-6 border-b border-slate-700/50 pb-4">
-                <h2 class="text-lg font-black text-white flex items-center uppercase tracking-wider italic">
+                <h2 class="text-xl font-black text-white flex items-center uppercase tracking-wider italic">
                     <i class="fas fa-circle-notch mr-2 text-[#8b5cf6]"></i> Obtener Diámetro
                 </h2>
-                <button onclick="openSavedModal()" class="text-[#a78bfa] hover:text-white bg-[#8b5cf6]/10 hover:bg-[#8b5cf6] px-4 py-2 rounded-xl transition-colors flex items-center gap-2 text-xs font-black uppercase tracking-tighter">
+                <button onclick="openSavedModal()" class="text-[#a78bfa] hover:text-white bg-[#8b5cf6]/10 hover:bg-[#8b5cf6] px-4 py-2 rounded-xl transition-colors flex items-center gap-2 text-sm font-black uppercase">
                     <i class="fas fa-folder-open"></i> Guardados
                 </button>
             </div>
 
             <div class="flex mb-6 bg-slate-900 p-1.5 rounded-xl">
-                <button onclick="setTool('cinta')" id="tab-cinta" class="flex-1 py-2 text-xs font-black rounded-lg shadow bg-slate-700 text-white transition-all uppercase">
+                <button onclick="setTool('cinta')" id="tab-cinta" class="flex-1 py-2 text-sm font-black rounded-lg shadow bg-slate-700 text-white transition-all uppercase">
                     Circunferencia
                 </button>
-                <button onclick="setTool('calibre')" id="tab-calibre" class="flex-1 py-2 text-xs font-black rounded-lg text-slate-500 hover:text-white transition-all uppercase">
+                <button onclick="setTool('calibre')" id="tab-calibre" class="flex-1 py-2 text-sm font-black rounded-lg text-slate-500 hover:text-white transition-all uppercase">
                     Calibre
                 </button>
             </div>
 
             <div class="mb-6">
-                <label id="input-label" class="block text-xs font-black text-slate-500 uppercase mb-2 tracking-widest text-left">Medida de la Cinta</label>
+                <label id="input-label" class="block text-sm font-black text-slate-500 uppercase mb-2 tracking-widest text-left">Medida de la Cinta</label>
                 <div class="flex items-center">
                     <input type="number" id="input-val" class="w-full text-2xl p-4 bg-slate-900 border border-slate-700 rounded-l-2xl text-white focus:outline-none focus:border-[#8b5cf6] font-mono" placeholder="0" oninput="handleInput()">
-                    <select id="input-unit" onchange="handleUnitChange()" class="bg-slate-800 border border-l-0 border-slate-700 text-slate-300 px-4 py-2 rounded-r-2xl text-base font-bold focus:outline-none cursor-pointer h-[66px]">
+                    <select id="input-unit" onchange="handleUnitChange()" class="bg-slate-800 border border-l-0 border-slate-700 text-slate-300 px-4 py-2 rounded-r-2xl text-lg font-bold focus:outline-none cursor-pointer h-[66px]">
                         <option value="cm">cm</option>
                         <option value="mm">mm</option>
                     </select>
@@ -121,64 +121,64 @@
 
             <div class="mb-6 bg-slate-900/50 p-4 rounded-2xl border border-slate-700 flex items-center gap-3">
                 <div class="flex-1 text-left">
-                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-1 tracking-widest">Tolerancia</label>
+                    <label class="block text-xs font-black text-slate-500 uppercase mb-1 tracking-widest">Tolerancia</label>
                     <input type="number" id="input-tolerance" class="w-full text-lg p-2 bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-[#8b5cf6] font-mono" placeholder="0.00" step="0.01" oninput="handleInput()">
                 </div>
-                <div class="text-xs font-black text-slate-600 pt-5 uppercase italic">mm</div>
+                <div class="text-sm font-black text-slate-600 pt-5 uppercase italic">mm</div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-[#8b5cf6]/5 border border-[#8b5cf6]/20 p-4 rounded-2xl text-center">
-                    <div class="text-[10px] text-[#a78bfa] font-black uppercase tracking-widest mb-1 text-left">Diámetro Final</div>
+                    <div class="text-xs text-[#a78bfa] font-black uppercase tracking-widest mb-1 text-left">Diámetro Final</div>
                     <div id="res-diametro" class="text-3xl font-black text-white tabular-nums">0.00</div>
                 </div>
                 <div class="bg-slate-900 p-4 rounded-2xl text-center border border-slate-700">
-                    <div class="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1 text-left">Radio</div>
+                    <div class="text-xs text-slate-500 font-black uppercase tracking-widest mb-1 text-left">Radio</div>
                     <div id="res-radio" class="text-3xl font-black text-slate-300 tabular-nums">0.00</div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-                <button onclick="enviarAEscalado()" class="w-full py-4 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white text-xs font-black rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg uppercase tracking-widest">
+                <button onclick="enviarAEscalado()" class="w-full py-4 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white text-sm font-black rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg uppercase tracking-widest">
                     <i class="fas fa-arrow-right"></i> Usar Diámetro
                 </button>
-                <button onclick="openSavePrompt()" class="w-full py-4 bg-amber-600/10 hover:bg-amber-600 text-amber-500 hover:text-white border border-amber-600/30 text-xs font-black rounded-xl transition-all flex items-center justify-center gap-3 uppercase tracking-widest">
+                <button onclick="openSavePrompt()" class="w-full py-4 bg-amber-600/10 hover:bg-amber-600 text-amber-500 hover:text-white border border-amber-600/30 text-sm font-black rounded-xl transition-all flex items-center justify-center gap-3 uppercase tracking-widest">
                     <i class="fas fa-save"></i> Guardar
                 </button>
             </div>
         </div>
 
         <div class="bg-[#1e293b] rounded-2xl shadow-xl p-6 border-t-4 border-emerald-500 h-full">
-            <h2 class="text-lg font-black text-white mb-6 flex items-center uppercase tracking-wider italic border-b border-slate-700/50 pb-4">
+            <h2 class="text-xl font-black text-white mb-6 flex items-center uppercase tracking-wider italic border-b border-slate-700/50 pb-4">
                 <i class="fas fa-expand-arrows-alt mr-2 text-emerald-500"></i> Cálculo de Escalado
             </h2>
             <div class="flex gap-4 mb-6">
                 <div class="flex-1 text-center">
-                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest text-left">Medida STL</label>
+                    <label class="block text-xs font-black text-slate-500 uppercase mb-2 tracking-widest text-left">Medida STL</label>
                     <input type="number" id="scale-orig" class="w-full p-4 bg-slate-900 border border-slate-700 rounded-2xl text-white text-center focus:outline-none focus:border-emerald-500 font-mono text-xl" placeholder="0" oninput="calcularEscala()">
                 </div>
                 <div class="flex items-center text-slate-700 pt-6">
                     <i class="fas fa-exchange-alt text-xl"></i>
                 </div>
                 <div class="flex-1 text-center">
-                    <label class="block text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest text-left">Objetivo</label>
+                    <label class="block text-xs font-black text-slate-500 uppercase mb-2 tracking-widest text-left">Objetivo</label>
                     <input type="number" id="scale-target" class="w-full p-4 bg-slate-900 border border-slate-700 rounded-2xl text-white text-center focus:outline-none focus:border-emerald-500 font-mono text-xl" placeholder="0" oninput="calcularEscala()">
                 </div>
             </div>
             <div class="bg-emerald-500/10 border border-emerald-500/20 p-8 rounded-3xl text-center">
-                <span class="text-xs text-emerald-500 font-black uppercase tracking-widest">Factor de Escala</span>
+                <span class="text-sm text-emerald-500 font-black uppercase tracking-widest">Factor de Escala</span>
                 <div id="res-scale" class="text-5xl font-black text-emerald-400 my-2 font-mono tabular-nums">100%</div>
-                <p id="scale-detail" class="text-xs text-slate-500 font-bold uppercase tracking-tighter italic">Ingresa medidas</p>
+                <p id="scale-detail" class="text-sm text-slate-500 font-bold uppercase tracking-tighter italic">Ingresa medidas</p>
             </div>
             <div class="mt-8 pt-8 border-t border-slate-700/50">
                 <a href="https://makerworld.com/es/models/2225287-caliper-radius-gauge-corner-radius-up-to-130-mm#profileId-2467730" target="_blank" rel="noopener noreferrer" class="tool-link-card block p-4 rounded-2xl flex items-center justify-between group">
                     <div class="flex items-center gap-3">
                         <i class="fas fa-print text-slate-500 group-hover:text-[#a78bfa] text-base"></i>
-                        <span class="text-xs font-black text-slate-400 group-hover:text-white uppercase tracking-tighter">Medidor de Radios MakerWorld</span>
+                        <span class="text-sm font-black text-slate-400 group-hover:text-white uppercase tracking-tighter">Medidor de Radios MakerWorld</span>
                     </div>
                     <i class="fas fa-external-link-alt text-slate-600 text-sm"></i>
                 </a>
-                <p class="text-[10px] text-slate-600 mt-4 italic text-center font-bold">Agradecimientos al autor del diseño en MakerWorld.</p>
+                <p class="text-xs text-slate-600 mt-4 italic text-center font-bold">Agradecimientos al autor del diseño en MakerWorld por su aporte a la comunidad[cite: 34, 35].</p>
             </div>
         </div>
     </div>
@@ -207,7 +207,7 @@
             <div class="p-6 flex-1 overflow-y-auto bg-slate-900/50">
                 <div id="saved-list-container" class="space-y-4"></div>
                 <div class="mt-6 p-4 bg-slate-950/50 rounded-2xl border border-dashed border-slate-800 text-center">
-                    <p class="text-[10px] text-slate-600 font-black uppercase tracking-[0.2em]">
+                    <p class="text-xs text-slate-600 font-black uppercase tracking-[0.2em]">
                         * Los datos se borrarán al cerrar la pestaña.
                     </p>
                 </div>
@@ -216,7 +216,7 @@
     </div>
 
     <footer class="mt-16 py-8 border-t border-slate-800 text-center">
-        <p class="text-[11px] font-black uppercase tracking-[0.4em] text-slate-700 italic">SkyDev Software @ 2026</p>
+        <p class="text-xs font-black uppercase tracking-[0.4em] text-slate-700 italic">SkyDev Software @ 2026 [cite: 57]</p>
     </footer>
 
     <script>
@@ -238,12 +238,12 @@
             const inputTol = document.getElementById('input-tolerance');
 
             if (tool === 'cinta') {
-                tabCinta.className = "flex-1 py-2 text-xs font-black rounded-lg shadow bg-slate-700 text-white transition-all uppercase";
-                tabCalibre.className = "flex-1 py-2 text-xs font-black rounded-lg text-slate-500 hover:text-white transition-all uppercase";
+                tabCinta.className = "flex-1 py-2 text-sm font-black rounded-lg shadow bg-slate-700 text-white transition-all uppercase";
+                tabCalibre.className = "flex-1 py-2 text-sm font-black rounded-lg text-slate-500 hover:text-white transition-all uppercase";
                 label.innerText = "MEDIDA DE LA CINTA (CIRCUNFERENCIA)";
             } else {
-                tabCalibre.className = "flex-1 py-2 text-xs font-black rounded-lg shadow bg-slate-700 text-white transition-all uppercase";
-                tabCinta.className = "flex-1 py-2 text-xs font-black rounded-lg text-slate-500 hover:text-white transition-all uppercase";
+                tabCalibre.className = "flex-1 py-2 text-sm font-black rounded-lg shadow bg-slate-700 text-white transition-all uppercase";
+                tabCinta.className = "flex-1 py-2 text-sm font-black rounded-lg text-slate-500 hover:text-white transition-all uppercase";
                 label.innerText = "LECTURA DEL CALIBRE (PUNTOS V)";
             }
 
