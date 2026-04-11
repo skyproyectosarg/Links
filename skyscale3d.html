@@ -12,13 +12,20 @@
             --card: #18181b;
             --border: #27272a;
             --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
             --success: #10b981;
             --text: #f4f4f5;
             --text-dim: #a1a1aa;
         }
 
+        /* Reset y Base */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
         body { background-color: var(--bg); color: var(--text); padding: 15px; min-height: 100vh; }
+
+        /* Quitar flechas de inputs numéricos */
+        input::-webkit-outer-spin-button, 
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
 
         .container { max-width: 1000px; margin: 0 auto; width: 100%; }
 
@@ -30,8 +37,9 @@
         .logo-box { 
             width: 48px; height: 48px; background: var(--accent); border-radius: 14px;
             display: flex; justify-content: center; align-items: center; font-size: 20px; color: white;
-            transform: rotate(3deg); box-shadow: 0 8px 16px rgba(139,92,246,0.25);
+            transform: rotate(3deg); box-shadow: 0 8px 16px rgba(139,92,246,0.25); transition: 0.3s;
         }
+        .logo-box:hover { transform: rotate(0deg); }
 
         .header-text h1 { font-size: 24px; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -1px; line-height: 1; }
         .header-text p { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
@@ -41,12 +49,12 @@
             padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800;
             text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s;
         }
-        .btn-hist:hover { border-color: var(--accent); }
+        .btn-hist:hover { border-color: var(--accent); background: var(--border); }
 
         .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 768px) { .main-grid { grid-template-columns: 1fr 1fr; } }
 
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 24px; }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 24px; transition: 0.3s; }
         .card-h2 { font-size: 12px; font-weight: 900; color: var(--text-dim); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-style: italic; }
 
         .tabs { display: flex; background: #000; padding: 4px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
@@ -56,28 +64,35 @@
         .input-group { margin-bottom: 20px; }
         label { display: block; font-size: 10px; font-weight: 900; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; font-family: monospace; }
         
-        .flex-input { display: flex; }
         input, select { 
             background: #09090b; border: 1px solid var(--border); color: white; 
             padding: 14px; font-size: 18px; font-weight: 700; outline: none; 
             border-radius: 12px; width: 100%; font-family: monospace; transition: 0.2s;
         }
-        input:focus { border-color: var(--accent); }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1); }
+        
+        .flex-input { display: flex; }
         .flex-input input { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-        .flex-input select { width: 85px; border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; color: var(--accent); font-weight: 900; }
+        .flex-input select { width: 85px; border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; color: var(--accent); font-weight: 900; cursor: pointer; }
 
         .res-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .res-box { background: rgba(0,0,0,0.3); padding: 16px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
         .res-val { font-size: 26px; font-weight: 900; color: white; margin-top: 4px; font-family: monospace; }
 
+        /* Animaciones en Botones */
         .btn-action { 
             width: 100%; padding: 16px; border-radius: 14px; border: none; font-weight: 900; 
             text-transform: uppercase; cursor: pointer; display: flex; align-items: center; 
-            justify-content: center; gap: 10px; font-size: 12px; transition: 0.2s; 
+            justify-content: center; gap: 10px; font-size: 12px; transition: all 0.2s ease; 
         }
         .btn-accent { background: var(--accent); color: white; box-shadow: 0 8px 16px rgba(139,92,246,0.2); }
+        .btn-accent:hover { background: var(--accent-hover); transform: translateY(-2px); box-shadow: 0 12px 20px rgba(139,92,246,0.3); }
+        .btn-accent:active { transform: translateY(0); }
+
         .btn-save { background: transparent; border: 1px solid var(--border); color: var(--text-dim); margin-top: 12px; }
-        .btn-success { background: var(--success) !important; color: white; }
+        .btn-save:hover { border-color: var(--text-dim); color: white; background: rgba(255,255,255,0.05); }
+
+        .btn-success { background: var(--success) !important; color: white; box-shadow: 0 8px 16px rgba(16,185,129,0.2); }
 
         .scale-result { 
             background: rgba(16, 185, 129, 0.05); border: 2px dashed rgba(16, 185, 129, 0.2); 
@@ -87,12 +102,10 @@
 
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
         .modal.active { display: flex; }
-        .modal-content { background: var(--card); border: 1px solid var(--border); width: 100%; max-width: 400px; border-radius: 24px; overflow: hidden; }
+        .modal-content { background: var(--card); border: 1px solid var(--border); width: 100%; max-width: 400px; border-radius: 24px; overflow: hidden; animation: fadeIn 0.2s ease-out; }
         .modal-h { background: var(--accent); padding: 20px; text-align: center; color: white; font-weight: 900; text-transform: uppercase; font-style: italic; }
 
-        .hist-item { background: #000; padding: 14px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
-        .del-btn { background: none; border: none; color: #ef4444; opacity: 0.5; cursor: pointer; padding: 8px; transition: 0.2s; }
-        .del-btn:hover { opacity: 1; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
         footer { margin-top: 50px; text-align: center; padding: 30px; border-top: 1px solid var(--border); color: #3f3f46; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
     </style>
@@ -147,7 +160,7 @@
             </div>
 
             <button class="btn-action btn-accent" onclick="passToScale()">Usar Diámetro <i class="fas fa-arrow-right"></i></button>
-            <button id="btn-save-main" class="btn-action btn-save" onclick="showSave()"><i class="fas fa-floppy-disk"></i> Guardar en Historial</button>
+            <button id="btn-save-main" class="btn-action btn-save" onclick="showSave(true)"><i class="fas fa-floppy-disk"></i> Guardar Medida</button>
         </div>
 
         <div class="card">
@@ -155,7 +168,7 @@
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:20px;">
                 <div>
                     <label>Medida STL (Slicer)</label>
-                    <input type="number" id="sc-orig" placeholder="0" oninput="runCalc()">
+                    <input type="number" id="sc-orig" placeholder="0" oninput="calcScaleOnly()">
                 </div>
                 <div>
                     <label>Medida Real (Objetivo)</label>
@@ -166,11 +179,11 @@
             <div class="scale-result">
                 <label style="color:var(--success)">Porcentaje de Escala</label>
                 <div id="out-scale" class="scale-val">100%</div>
-                <button onclick="copyRes()" style="background:none; border:none; color:var(--text-dim); font-size:10px; font-weight:800; cursor:pointer; margin-top:16px; text-decoration:underline;">COPIAR VALOR</button>
+                <button onclick="copyRes()" style="background:none; border:none; color:var(--text-dim); font-size:10px; font-weight:800; cursor:pointer; margin-top:16px; text-decoration:underline; transition: 0.2s;">COPIAR VALOR</button>
             </div>
             
             <p style="font-size:11px; color:var(--text-dim); line-height:1.4; text-align:center; font-style:italic;">
-                Tip: Calibrá primero el <b>Flow Ratio</b> en Toolbox para encajes perfectos.
+                Tip: Calibrá primero el <b>Flow Ratio</b> en Toolbox para encajes perfectos[cite: 288, 289].
             </p>
         </div>
     </div>
@@ -180,11 +193,11 @@
     <div class="modal-content">
         <div class="modal-h">Guardar Registro</div>
         <div style="padding:24px;">
-            <label>Nombre de la Pieza / Proyecto</label>
+            <label>Nombre del Proyecto</label>
             <input type="text" id="save-name" placeholder="Ej: Inserto Chopp 360ml">
             <div style="display:flex; gap:12px; margin-top:24px;">
                 <button class="btn-action btn-save" style="margin:0" onclick="showSave(false)">Cancelar</button>
-                <button class="btn-action btn-accent" style="margin:0" onclick="confirmSave()">Guardar</button>
+                <button class="btn-action btn-accent" style="margin:0" onclick="confirmSave()">Confirmar</button>
             </div>
         </div>
     </div>
@@ -200,7 +213,7 @@
     </div>
 </div>
 
-<footer>SkyDev Software © 2026 | Catamarca, Argentina</footer>
+<footer>SkyDev Software © 2026 | Catamarca, Argentina [cite: 361]</footer>
 
 <script>
     let mode = 'cinta';
@@ -218,16 +231,11 @@
         let val = parseFloat(document.getElementById('in-val').value) || 0;
         let tol = parseFloat(document.getElementById('in-tol').value) || 0;
         let unit = document.getElementById('in-unit').value;
-
         if (unit === 'cm') val *= 10;
 
-        let dia = 0;
-        if (mode === 'cinta') {
-            dia = val > 0 ? (val / Math.PI) + tol : 0;
-        } else {
-            // Constante para bloque en V de 90 grados
-            dia = val > 0 ? (val * 2.4142 * 2) + tol : 0;
-        }
+        let dia = (mode === 'cinta') ? 
+            (val > 0 ? (val / Math.PI) + tol : 0) : 
+            (val > 0 ? (val * 2.4142 * 2) + tol : 0);
 
         document.getElementById('out-dia').innerText = dia.toFixed(2);
         document.getElementById('out-rad').innerText = (dia / 2).toFixed(2);
@@ -250,12 +258,11 @@
     }
 
     function copyRes() {
-        let val = document.getElementById('out-scale').innerText;
-        navigator.clipboard.writeText(val);
-        alert("¡Copiado al portapapeles!");
+        navigator.clipboard.writeText(document.getElementById('out-scale').innerText);
+        alert("¡Copiado!");
     }
 
-    function showSave(st = true) {
+    function showSave(st) {
         if (st && parseFloat(document.getElementById('out-dia').innerText) <= 0) return;
         document.getElementById('mod-save').classList.toggle('active', st);
     }
@@ -284,12 +291,12 @@
     function renderHist() {
         const container = document.getElementById('hist-list');
         container.innerHTML = storage.length ? storage.map(i => `
-            <div class="hist-item">
+            <div style="background:#000; padding:14px; border-radius:14px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--border);">
                 <div>
                     <div style="font-weight:900; font-size:11px; text-transform:uppercase; color:white;">${i.name}</div>
                     <div style="font-size:10px; color:var(--text-dim)">D: ${i.dia}mm | ${i.scale}</div>
                 </div>
-                <button class="del-btn" onclick="deleteItem(${i.id})"><i class="fas fa-trash"></i></button>
+                <button style="background:none; border:none; color:#ef4444; cursor:pointer;" onclick="deleteItem(${i.id})"><i class="fas fa-trash"></i></button>
             </div>
         `).join('') : '<p style="text-align:center; color:var(--text-dim); font-size:11px;">HISTORIAL VACÍO</p>';
     }
@@ -300,6 +307,5 @@
         renderHist();
     }
 </script>
-
 </body>
 </html>
