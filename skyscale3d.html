@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SkyScale 3D | Medidas y Escalado</title>
     <meta name="author" content="Franco Jesús Pacheco">
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -13,320 +12,294 @@
             --card: #18181b;
             --border: #27272a;
             --accent: #8b5cf6;
-            --accent-dim: rgba(139, 92, 246, 0.1);
             --success: #10b981;
+            --text: #f4f4f5;
+            --text-dim: #a1a1aa;
         }
-        body { background-color: var(--bg); color: #f4f4f5; font-family: 'Inter', system-ui, sans-serif; }
-        
-        /* Logo Box inspirado en Toolbox */
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 15px; min-height: 100vh; }
+
+        .container { max-width: 1000px; margin: 0 auto; width: 100%; }
+
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding-bottom: 20px; margin-bottom: 30px; border-bottom: 1px solid var(--border);
+        }
+
         .logo-box { 
             width: 48px; height: 48px; background: var(--accent); border-radius: 14px;
-            display: flex; justify-content: center; align-items: center; 
-            font-size: 20px; color: white; transform: rotate(3deg); 
-            box-shadow: 0 8px 16px rgba(139,92,246,0.25); transition: 0.3s;
+            display: flex; justify-content: center; align-items: center; font-size: 20px; color: white;
+            transform: rotate(3deg); box-shadow: 0 8px 16px rgba(139,92,246,0.25);
         }
-        .logo-box:hover { transform: rotate(0deg); }
-        
-        .btn-success { background-color: var(--success) !important; box-shadow: 0 8px 16px rgba(16,185,129,0.25) !important; }
-        
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type=number] { -moz-appearance: textfield; font-family: monospace; }
 
-        .modal-enter { animation: fadeIn 0.2s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .header-text h1 { font-size: 24px; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -1px; line-height: 1; }
+        .header-text p { font-size: 10px; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+        .btn-hist { 
+            background: var(--card); border: 1px solid var(--border); color: var(--text);
+            padding: 10px 16px; border-radius: 12px; font-size: 11px; font-weight: 800;
+            text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-hist:hover { border-color: var(--accent); }
+
+        .main-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .main-grid { grid-template-columns: 1fr 1fr; } }
+
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 24px; }
+        .card-h2 { font-size: 12px; font-weight: 900; color: var(--text-dim); text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-style: italic; }
+
+        .tabs { display: flex; background: #000; padding: 4px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .tab { flex: 1; padding: 12px; border: none; background: none; color: var(--text-dim); font-size: 10px; font-weight: 800; text-transform: uppercase; cursor: pointer; border-radius: 10px; transition: 0.2s; }
+        .tab.active { background: var(--accent); color: white; box-shadow: 0 4px 12px rgba(139,92,246,0.3); }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 10px; font-weight: 900; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; font-family: monospace; }
         
-        .result-value { text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .flex-input { display: flex; }
+        input, select { 
+            background: #09090b; border: 1px solid var(--border); color: white; 
+            padding: 14px; font-size: 18px; font-weight: 700; outline: none; 
+            border-radius: 12px; width: 100%; font-family: monospace; transition: 0.2s;
+        }
+        input:focus { border-color: var(--accent); }
+        .flex-input input { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+        .flex-input select { width: 85px; border-left: none; border-top-left-radius: 0; border-bottom-left-radius: 0; color: var(--accent); font-weight: 900; }
+
+        .res-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .res-box { background: rgba(0,0,0,0.3); padding: 16px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
+        .res-val { font-size: 26px; font-weight: 900; color: white; margin-top: 4px; font-family: monospace; }
+
+        .btn-action { 
+            width: 100%; padding: 16px; border-radius: 14px; border: none; font-weight: 900; 
+            text-transform: uppercase; cursor: pointer; display: flex; align-items: center; 
+            justify-content: center; gap: 10px; font-size: 12px; transition: 0.2s; 
+        }
+        .btn-accent { background: var(--accent); color: white; box-shadow: 0 8px 16px rgba(139,92,246,0.2); }
+        .btn-save { background: transparent; border: 1px solid var(--border); color: var(--text-dim); margin-top: 12px; }
+        .btn-success { background: var(--success) !important; color: white; }
+
+        .scale-result { 
+            background: rgba(16, 185, 129, 0.05); border: 2px dashed rgba(16, 185, 129, 0.2); 
+            border-radius: 24px; padding: 40px 20px; text-align: center; margin: 20px 0; 
+        }
+        .scale-val { font-size: 52px; font-weight: 900; color: var(--success); font-family: monospace; text-shadow: 0 0 20px rgba(16,185,129,0.2); }
+
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--card); border: 1px solid var(--border); width: 100%; max-width: 400px; border-radius: 24px; overflow: hidden; }
+        .modal-h { background: var(--accent); padding: 20px; text-align: center; color: white; font-weight: 900; text-transform: uppercase; font-style: italic; }
+
+        .hist-item { background: #000; padding: 14px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .del-btn { background: none; border: none; color: #ef4444; opacity: 0.5; cursor: pointer; padding: 8px; transition: 0.2s; }
+        .del-btn:hover { opacity: 1; }
+
+        footer { margin-top: 50px; text-align: center; padding: 30px; border-top: 1px solid var(--border); color: #3f3f46; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
-<body class="p-4 md:p-8 max-w-6xl mx-auto">
+<body>
 
-    <header class="flex flex-col md:flex-row items-center justify-between mb-8 border-b border-zinc-800 pb-8 gap-4">
-        <div class="flex items-center gap-4">
+<div class="container">
+    <header>
+        <div style="display:flex; align-items:center; gap:16px;">
             <div class="logo-box"><i class="fas fa-ruler-combined"></i></div>
-            <div>
-                <h1 class="text-3xl font-black tracking-tighter text-white uppercase italic">SkyScale 3D</h1>
-                <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 italic">Cálculos de precisión técnica [cite: 2]</p>
+            <div class="header-text">
+                <h1>SkyScale 3D</h1>
+                <p>Búnker de Precisión SkyDev</p>
             </div>
         </div>
-        <div class="flex gap-2">
-            <button onclick="openSavedModal()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-4 py-2 rounded-xl transition-all flex items-center gap-2 text-xs font-black uppercase tracking-widest border border-zinc-700">
-                <i class="fas fa-clock-rotate-left text-[#8b5cf6]"></i> Historial
-            </button>
-        </div>
+        <button class="btn-hist" onclick="toggleHist(true)"><i class="fas fa-clock-rotate-left"></i> Historial</button>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        
-        <div class="bg-zinc-900/50 rounded-3xl p-6 border border-zinc-800 relative">
-            <h2 class="text-sm font-black text-zinc-400 mb-6 flex items-center uppercase tracking-[0.2em] italic">
-                <i class="fas fa-circle-notch mr-2 text-[#8b5cf6]"></i> Geometría de Pieza
-            </h2>
-
-            <div class="flex mb-6 bg-black/40 p-1 rounded-2xl border border-zinc-800">
-                <button onclick="setTool('cinta')" id="tab-cinta" class="flex-1 py-3 text-[10px] font-black rounded-xl bg-zinc-800 text-white transition-all uppercase tracking-widest active">
-                    Circunferencia
-                </button>
-                <button onclick="setTool('calibre')" id="tab-calibre" class="flex-1 py-3 text-[10px] font-black rounded-xl text-zinc-500 hover:text-zinc-300 transition-all uppercase tracking-widest">
-                    Puntos en V
-                </button>
+    <div class="main-grid">
+        <div class="card">
+            <h2 class="card-h2"><i class="fas fa-circle-notch" style="color:var(--accent)"></i> Cálculo de Diámetro</h2>
+            <div class="tabs">
+                <button id="tab-c" class="tab active" onclick="setMode('cinta')">Circunferencia</button>
+                <button id="tab-v" class="tab" onclick="setMode('calibre')">Puntos en V</button>
             </div>
 
-            <div class="space-y-6">
+            <div class="input-group">
+                <label id="lbl-input">Medida de la Cinta</label>
+                <div class="flex-input">
+                    <input type="number" id="in-val" placeholder="0" oninput="runCalc()">
+                    <select id="in-unit" onchange="runCalc()">
+                        <option value="cm">CM</option>
+                        <option value="mm">MM</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Holgura / Tolerancia (mm)</label>
+                <input type="number" id="in-tol" placeholder="0.00" step="0.01" oninput="runCalc()">
+            </div>
+
+            <div class="res-container">
+                <div class="res-box">
+                    <label>Diámetro</label>
+                    <div id="out-dia" class="res-val">0.00</div>
+                </div>
+                <div class="res-box">
+                    <label>Radio</label>
+                    <div id="out-rad" class="res-val">0.00</div>
+                </div>
+            </div>
+
+            <button class="btn-action btn-accent" onclick="passToScale()">Usar Diámetro <i class="fas fa-arrow-right"></i></button>
+            <button id="btn-save-main" class="btn-action btn-save" onclick="showSave()"><i class="fas fa-floppy-disk"></i> Guardar en Historial</button>
+        </div>
+
+        <div class="card">
+            <h2 class="card-h2"><i class="fas fa-expand-arrows-alt" style="color:var(--success)"></i> Factor de Escalado</h2>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:20px;">
                 <div>
-                    <label id="input-label" class="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest italic">Medida de la Cinta</label>
-                    <div class="flex shadow-2xl">
-                        <input type="number" id="input-val" class="w-full text-2xl p-4 bg-zinc-950 border border-zinc-800 rounded-l-2xl text-white focus:outline-none focus:border-[#8b5cf6]" placeholder="0" oninput="calcularTodo()">
-                        <select id="input-unit" onchange="calcularTodo()" class="bg-zinc-900 border border-l-0 border-zinc-800 text-[#8b5cf6] px-4 rounded-r-2xl font-black focus:outline-none cursor-pointer">
-                            <option value="cm">CM</option>
-                            <option value="mm">MM</option>
-                        </select>
-                    </div>
+                    <label>Medida STL (Slicer)</label>
+                    <input type="number" id="sc-orig" placeholder="0" oninput="runCalc()">
                 </div>
-
-                <div class="bg-black/20 p-4 rounded-2xl border border-zinc-800">
-                    <label class="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Tolerancia Extra (Holgura)</label>
-                    <div class="flex items-center gap-3">
-                        <input type="number" id="input-tolerance" class="w-full text-lg p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-white focus:outline-none focus:border-[#8b5cf6]" placeholder="0.00" step="0.01" oninput="calcularTodo()">
-                        <span class="text-[10px] font-black text-zinc-600 uppercase italic">mm</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-[#8b5cf6]/5 border border-[#8b5cf6]/20 p-4 rounded-2xl">
-                        <span class="text-[9px] text-[#a78bfa] font-black uppercase tracking-widest block mb-1">Diámetro Final</span>
-                        <div id="res-diametro" class="text-3xl font-black text-white tabular-nums result-value">0.00</div>
-                    </div>
-                    <div class="bg-black/30 p-4 rounded-2xl border border-zinc-800">
-                        <span class="text-[9px] text-zinc-500 font-black uppercase tracking-widest block mb-1">Radio</span>
-                        <div id="res-radio" class="text-3xl font-black text-zinc-400 tabular-nums">0.00</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 pt-4">
-                    <button onclick="enviarAEscalado()" class="py-4 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white text-[10px] font-black rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg uppercase tracking-widest">
-                        <i class="fas fa-arrow-right"></i> Usar Medida
-                    </button>
-                    <button id="btn-save" onclick="openSavePrompt()" class="py-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 text-[10px] font-black rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-widest">
-                        <i class="fas fa-floppy-disk"></i> Guardar
-                    </button>
+                <div>
+                    <label>Medida Real (Objetivo)</label>
+                    <input type="number" id="sc-targ" placeholder="0" oninput="calcScaleOnly()">
                 </div>
             </div>
-        </div>
 
-        <div class="bg-zinc-900/50 rounded-3xl p-6 border border-zinc-800 h-full">
-            <h2 class="text-sm font-black text-zinc-400 mb-6 flex items-center uppercase tracking-[0.2em] italic">
-                <i class="fas fa-expand-arrows-alt mr-2 text-emerald-500"></i> Factor de Escala
-            </h2>
+            <div class="scale-result">
+                <label style="color:var(--success)">Porcentaje de Escala</label>
+                <div id="out-scale" class="scale-val">100%</div>
+                <button onclick="copyRes()" style="background:none; border:none; color:var(--text-dim); font-size:10px; font-weight:800; cursor:pointer; margin-top:16px; text-decoration:underline;">COPIAR VALOR</button>
+            </div>
             
-            <div class="flex gap-4 mb-8">
-                <div class="flex-1">
-                    <label class="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Medida STL (Slicer)</label>
-                    <input type="number" id="scale-orig" class="w-full p-4 bg-zinc-950 border border-zinc-800 rounded-2xl text-white text-center focus:outline-none focus:border-emerald-500 text-xl" placeholder="0" oninput="calcularTodo()">
-                </div>
-                <div class="flex items-center text-zinc-800 pt-6">
-                    <i class="fas fa-chevron-right text-xl"></i>
-                </div>
-                <div class="flex-1">
-                    <label class="block text-[10px] font-black text-zinc-500 uppercase mb-2 tracking-widest">Medida Real (Objetivo)</label>
-                    <input type="number" id="scale-target" class="w-full p-4 bg-zinc-950 border border-zinc-800 rounded-2xl text-white text-center focus:outline-none focus:border-emerald-500 text-xl" placeholder="0" oninput="calcularTodo()">
-                </div>
-            </div>
+            <p style="font-size:11px; color:var(--text-dim); line-height:1.4; text-align:center; font-style:italic;">
+                Tip: Calibrá primero el <b>Flow Ratio</b> en Toolbox para encajes perfectos.
+            </p>
+        </div>
+    </div>
+</div>
 
-            <div class="bg-emerald-500/10 border border-emerald-500/20 p-10 rounded-[2.5rem] text-center mb-8">
-                <span class="text-[10px] text-emerald-500 font-black uppercase tracking-[0.3em]">Porcentaje a Aplicar</span>
-                <div id="res-scale" class="text-6xl font-black text-emerald-400 my-4 tabular-nums result-value">100%</div>
-                <button id="btn-copy" onclick="copyScale()" class="mt-2 text-[10px] font-black text-emerald-500/60 uppercase tracking-widest hover:text-emerald-400 transition-colors cursor-pointer">
-                    <i class="fas fa-copy mr-1"></i> Copiar Factor
-                </button>
-            </div>
-
-            <div class="p-6 bg-amber-500/5 border border-amber-500/10 rounded-2xl">
-                <h4 class="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-2 italic">⚠️ Nota Técnica</h4>
-                <p class="text-xs text-zinc-500 leading-relaxed">
-                    Si el encaje falla, verifica el <strong>Flow Ratio</strong> en Sky Toolbox. Un error del 1% arruina los encajes mecánicos[cite: 289].
-                </p>
+<div id="mod-save" class="modal">
+    <div class="modal-content">
+        <div class="modal-h">Guardar Registro</div>
+        <div style="padding:24px;">
+            <label>Nombre de la Pieza / Proyecto</label>
+            <input type="text" id="save-name" placeholder="Ej: Inserto Chopp 360ml">
+            <div style="display:flex; gap:12px; margin-top:24px;">
+                <button class="btn-action btn-save" style="margin:0" onclick="showSave(false)">Cancelar</button>
+                <button class="btn-action btn-accent" style="margin:0" onclick="confirmSave()">Guardar</button>
             </div>
         </div>
     </div>
+</div>
 
-    <div id="modal-save" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] shadow-2xl w-full max-w-sm overflow-hidden modal-enter">
-            <div class="bg-[#8b5cf6] p-6 text-white text-center">
-                <i class="fas fa-bookmark text-2xl mb-2"></i>
-                <h3 class="font-black text-lg uppercase italic tracking-tighter">Guardar Medida</h3>
-            </div>
-            <div class="p-8">
-                <input type="text" id="save-name-input" class="w-full p-4 bg-zinc-950 border border-zinc-800 rounded-2xl focus:outline-none focus:border-[#8b5cf6] text-white font-black text-center" placeholder="Ej: Inserto Chopp 360ml">
-                <div class="mt-8 flex gap-3">
-                    <button onclick="closeSavePrompt()" class="flex-1 py-3 rounded-xl text-zinc-500 font-black uppercase text-[10px] hover:bg-zinc-800 tracking-widest">Cancelar</button>
-                    <button onclick="confirmSaveData()" class="flex-1 py-3 rounded-xl bg-[#8b5cf6] text-white font-black uppercase text-[10px] shadow-lg tracking-widest">Confirmar</button>
-                </div>
-            </div>
+<div id="mod-hist" class="modal">
+    <div class="modal-content" style="max-width:450px;">
+        <div class="modal-h">Historial de Medidas</div>
+        <div id="hist-list" style="padding:20px; max-height:400px; overflow-y:auto;"></div>
+        <div style="padding:16px; border-top:1px solid var(--border); text-align:center;">
+            <button class="btn-action btn-save" onclick="toggleHist(false)">Cerrar</button>
         </div>
     </div>
+</div>
 
-    <div id="modal-list" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-md">
-        <div class="bg-zinc-900 border border-zinc-800 rounded-[2rem] shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col modal-enter">
-            <div class="p-6 border-b border-zinc-800 flex justify-between items-center bg-zinc-900/50">
-                <h3 class="font-black text-zinc-400 uppercase text-[10px] tracking-[0.3em] italic">Historial de Medidas</h3>
-                <button onclick="closeSavedModal()" class="text-zinc-600 hover:text-white transition-colors"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            <div id="saved-list-container" class="p-6 flex-1 overflow-y-auto space-y-4"></div>
-        </div>
-    </div>
+<footer>SkyDev Software © 2026 | Catamarca, Argentina</footer>
 
-    <footer class="mt-20 py-10 border-t border-zinc-900 text-center">
-        <p class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-700 italic">SkyDev Software &copy; 2026</p>
-    </footer>
+<script>
+    let mode = 'cinta';
+    let storage = JSON.parse(localStorage.getItem('sky_scale_db')) || [];
 
-    <script>
-        let currentTool = 'cinta';
-        let savedMeasures = JSON.parse(localStorage.getItem('sky_scale_history')) || [];
+    function setMode(m) {
+        mode = m;
+        document.getElementById('tab-c').className = m === 'cinta' ? 'tab active' : 'tab';
+        document.getElementById('tab-v').className = m === 'calibre' ? 'tab active' : 'tab';
+        document.getElementById('lbl-input').innerText = m === 'cinta' ? 'Medida de la Cinta' : 'Lectura en V (90°)';
+        runCalc();
+    }
 
-        window.onload = () => {
-            setTool('cinta');
-            renderHistory();
-        };
+    function runCalc() {
+        let val = parseFloat(document.getElementById('in-val').value) || 0;
+        let tol = parseFloat(document.getElementById('in-tol').value) || 0;
+        let unit = document.getElementById('in-unit').value;
 
-        // Función de captura segura de Toolbox 
-        function getNum(id) {
-            const val = parseFloat(document.getElementById(id).value);
-            return isNaN(val) ? 0 : val;
+        if (unit === 'cm') val *= 10;
+
+        let dia = 0;
+        if (mode === 'cinta') {
+            dia = val > 0 ? (val / Math.PI) + tol : 0;
+        } else {
+            // Constante para bloque en V de 90 grados
+            dia = val > 0 ? (val * 2.4142 * 2) + tol : 0;
         }
 
-        function setTool(tool) {
-            currentTool = tool;
-            const label = document.getElementById('input-label');
-            
-            document.getElementById('tab-cinta').classList.toggle('active', tool === 'cinta');
-            document.getElementById('tab-calibre').classList.toggle('active', tool === 'calibre');
-            
-            // Actualización de estilos similar a switchTab de Toolbox [cite: 365, 369]
-            document.querySelectorAll('button[id^="tab-"]').forEach(btn => {
-                btn.className = "flex-1 py-3 text-[10px] font-black rounded-xl text-zinc-500 hover:text-zinc-300 transition-all uppercase tracking-widest";
-            });
-            document.getElementById('tab-' + tool).className = "flex-1 py-3 text-[10px] font-black rounded-xl bg-zinc-800 text-white transition-all uppercase tracking-widest border border-zinc-700 shadow-lg";
+        document.getElementById('out-dia').innerText = dia.toFixed(2);
+        document.getElementById('out-rad').innerText = (dia / 2).toFixed(2);
+        calcScaleOnly();
+    }
 
-            label.innerText = (tool === 'cinta') ? "MEDIDA DE LA CINTA (CIRCUNFERENCIA)" : "LECTURA DEL CALIBRE (PUNTOS EN V)";
-            calcularTodo();
+    function calcScaleOnly() {
+        let orig = parseFloat(document.getElementById('sc-orig').value) || 0;
+        let targ = parseFloat(document.getElementById('sc-targ').value) || 0;
+        let res = (orig > 0 && targ > 0) ? ((targ / orig) * 100).toFixed(2) : "100.00";
+        document.getElementById('out-scale').innerText = res + "%";
+    }
+
+    function passToScale() {
+        let dia = document.getElementById('out-dia').innerText;
+        if (parseFloat(dia) > 0) {
+            document.getElementById('sc-targ').value = dia;
+            calcScaleOnly();
         }
+    }
 
-        function calcularTodo() {
-            // Lógica de cálculo centralizada [cite: 379]
-            let val = getNum('input-val');
-            let tol = getNum('input-tolerance');
-            const unit = document.getElementById('input-unit').value;
-            
-            if (unit === 'cm') val *= 10;
+    function copyRes() {
+        let val = document.getElementById('out-scale').innerText;
+        navigator.clipboard.writeText(val);
+        alert("¡Copiado al portapapeles!");
+    }
 
-            let d = 0;
-            if (currentTool === 'cinta') {
-                d = val > 0 ? (val / Math.PI) + tol : 0;
-            } else {
-                // Constante técnica para bloques en V de 90°
-                d = val > 0 ? (val * 2.4142 * 2) + tol : 0;
-            }
+    function showSave(st = true) {
+        if (st && parseFloat(document.getElementById('out-dia').innerText) <= 0) return;
+        document.getElementById('mod-save').classList.toggle('active', st);
+    }
 
-            document.getElementById('res-diametro').innerText = d.toFixed(2);
-            document.getElementById('res-radio').innerText = (d / 2).toFixed(2);
+    function confirmSave() {
+        let name = document.getElementById('save-name').value.trim() || "Sin nombre";
+        storage.unshift({
+            id: Date.now(),
+            name: name,
+            dia: document.getElementById('out-dia').innerText,
+            scale: document.getElementById('out-scale').innerText,
+            date: new Date().toLocaleDateString()
+        });
+        localStorage.setItem('sky_scale_db', JSON.stringify(storage.slice(0, 20)));
+        showSave(false);
+        let btn = document.getElementById('btn-save-main');
+        btn.classList.add('btn-success');
+        setTimeout(() => btn.classList.remove('btn-success'), 1000);
+    }
 
-            // Calcular Escala
-            const orig = getNum('scale-orig');
-            const target = getNum('scale-target');
-            const resScale = document.getElementById('res-scale');
+    function toggleHist(st) {
+        if (st) renderHist();
+        document.getElementById('mod-hist').classList.toggle('active', st);
+    }
 
-            if (orig > 0 && target > 0) {
-                resScale.innerText = ((target / orig) * 100).toFixed(2) + "%";
-            } else {
-                resScale.innerText = "100%";
-            }
-        }
-
-        function enviarAEscalado() {
-            const diam = document.getElementById('res-diametro').innerText;
-            if (parseFloat(diam) > 0) {
-                const targetInput = document.getElementById('scale-target');
-                targetInput.value = diam;
-                // Efecto visual de Toolbox 
-                targetInput.classList.add('ring-2', 'ring-[#8b5cf6]');
-                setTimeout(() => targetInput.classList.remove('ring-2', 'ring-[#8b5cf6]'), 1000);
-                calcularTodo();
-            }
-        }
-
-        function copyScale() {
-            const val = document.getElementById('res-scale').innerText;
-            navigator.clipboard.writeText(val);
-            const btn = document.getElementById('btn-copy');
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check text-emerald-500"></i> COPIADO';
-            setTimeout(() => btn.innerHTML = original, 2000);
-        }
-
-        function openSavePrompt() {
-            if (parseFloat(document.getElementById('res-diametro').innerText) <= 0) return;
-            document.getElementById('modal-save').classList.remove('hidden');
-            document.getElementById('save-name-input').focus();
-        }
-
-        function closeSavePrompt() { document.getElementById('modal-save').classList.add('hidden'); }
-
-        function confirmSaveData() {
-            const name = document.getElementById('save-name-input').value.trim() || "Pieza sin nombre";
-            const item = {
-                id: Date.now(),
-                name: name,
-                d: document.getElementById('res-diametro').innerText,
-                s: document.getElementById('res-scale').innerText,
-                date: new Date().toLocaleDateString()
-            };
-            
-            savedMeasures.unshift(item);
-            if(savedMeasures.length > 15) savedMeasures.pop(); // Límite de historial [cite: 391]
-            localStorage.setItem('sky_scale_history', JSON.stringify(savedMeasures));
-            
-            const btn = document.getElementById('btn-save');
-            btn.classList.add('btn-success', 'text-white');
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            
-            setTimeout(() => {
-                btn.classList.remove('btn-success', 'text-white');
-                btn.innerHTML = '<i class="fas fa-floppy-disk"></i>';
-                closeSavePrompt();
-                renderHistory();
-            }, 1000);
-        }
-
-        function renderHistory() {
-            const container = document.getElementById('saved-list-container');
-            if (savedMeasures.length === 0) {
-                container.innerHTML = '<p class="text-center py-10 text-zinc-700 uppercase font-black text-[10px]">Sin registros</p>';
-                return;
-            }
-            container.innerHTML = savedMeasures.map(item => `
-                <div class="bg-black/40 border border-zinc-800 p-4 rounded-2xl flex justify-between items-center group">
-                    <div>
-                        <h4 class="text-white font-black text-xs uppercase italic">${item.name}</h4>
-                        <p class="text-[9px] text-zinc-600 font-bold mt-1">${item.date} • D: ${item.d}mm</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <span class="text-emerald-500 font-mono font-black text-xs">${item.s}</span>
-                        <button onclick="deleteItem(${item.id})" class="text-zinc-800 hover:text-red-500 transition-colors">
-                            <i class="fas fa-trash-can"></i>
-                        </button>
-                    </div>
+    function renderHist() {
+        const container = document.getElementById('hist-list');
+        container.innerHTML = storage.length ? storage.map(i => `
+            <div class="hist-item">
+                <div>
+                    <div style="font-weight:900; font-size:11px; text-transform:uppercase; color:white;">${i.name}</div>
+                    <div style="font-size:10px; color:var(--text-dim)">D: ${i.dia}mm | ${i.scale}</div>
                 </div>
-            `).join('');
-        }
+                <button class="del-btn" onclick="deleteItem(${i.id})"><i class="fas fa-trash"></i></button>
+            </div>
+        `).join('') : '<p style="text-align:center; color:var(--text-dim); font-size:11px;">HISTORIAL VACÍO</p>';
+    }
 
-        function deleteItem(id) {
-            savedMeasures = savedMeasures.filter(m => m.id !== id);
-            localStorage.setItem('sky_scale_history', JSON.stringify(savedMeasures));
-            renderHistory();
-        }
+    function deleteItem(id) {
+        storage = storage.filter(i => i.id !== id);
+        localStorage.setItem('sky_scale_db', JSON.stringify(storage));
+        renderHist();
+    }
+</script>
 
-        function openSavedModal() { document.getElementById('modal-list').classList.remove('hidden'); }
-        function closeSavedModal() { document.getElementById('modal-list').classList.add('hidden'); }
-    </script>
 </body>
 </html>
